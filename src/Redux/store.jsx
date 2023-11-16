@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 import AuthReducer from "../Reducer/AuthReducer";
 
 const store = createStore(
-    combineReducers({AuthReducer}),
+    combineReducers({auth:AuthReducer}),
     composeWithDevTools(applyMiddleware(thunk))
 );
 

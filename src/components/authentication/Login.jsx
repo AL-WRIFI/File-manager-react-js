@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link} from "react-router-dom";
-
+import { signInUser } from "../../Redux/actionCreators/authActionCreators";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
 
     const [email ,setEmail] = useState('');
     const [password ,setPassword] = useState('');
     
+    const dispatch = useDispatch();
 
     const handelSubmit =(e) =>{
       e.preventDefault();
-      
+      if(!email || !password){
+        alert(" الحقول اجباريه ");
+        return;
+      }
+
+      dispatch(signInUser(email,password));
     }
 
 
