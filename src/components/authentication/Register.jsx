@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Link} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signUpUser } from "../../Redux/actionCreators/authActionCreators";
 
 
 const Register = () => {
@@ -9,11 +11,29 @@ const Register = () => {
     const [email ,setEmail] = useState("");
     const [password ,setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [success, setSuccess] = useState(false);
 
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const handelSubmit =(e) =>{
       e.preventDefault();
-      
+      if(!email || !password || !confirmPassword){
+        alert("جميع الحقول اجبارية")
+        return;
+      }
+      if(password !== confirmPassword){
+        alert("كلمة المرور غير متطابقه");
+        return;
+      }
+
+      dispatch(signUpUser(name,email,password ,setSuccess));
     }
+
+    useEffect(()=>{
+      if(success){
+        navigate("/dashboard");
+      }
+    },[success]);
 
 
     return (

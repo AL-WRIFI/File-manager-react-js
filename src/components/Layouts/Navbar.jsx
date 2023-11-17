@@ -1,13 +1,21 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Button, Nav, Navbar } from "react-bootstrap";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { signOutUser } from "../../Redux/actionCreators/authActionCreators";
+import { useDispatch } from "react-redux";
 
 const NavbarComponent =()=>{
-  
+    
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useSelector(state =>state.auth);
 
   return (
-    <Navbar bg="dark" expand="lg" variant="dark">
+    <Navbar bg="white"
+    expand="lg"
+    variant="light"
+    className="border-bottom py-3 shadow-sm">
       <Navbar.Brand
         
         style={{ marginLeft: "60px", marginRight: "auto" }}
@@ -16,40 +24,76 @@ const NavbarComponent =()=>{
       </Navbar.Brand>
       <Nav style={{ marginRight: "60px" }}>
       
-          
-            <Nav.Link
-              className="text-white d-flex align-items-center justify-content-between"
-              style={{ pointerEvents: "unset", cursor: "text" }}
-            >
-              Welcome,
-            </Nav.Link>
-            <Nav.Link
-              // as={Link}
-              style={{ marginRight: "10px", marginLeft: "-10px" }}
-              className="text-white"
-              to="/dashboard/profile"
-            >
-              {/* <strong>{user.data.displayName}</strong> */}
-            </Nav.Link>
-            <Nav.Link
-              as={Button}
-              to="/login"
-              variant="primary"
-              active
-              style={{ marginRight: "5px" }}
-              size="sm"
-            >
-              <Link to="/login">Login</Link>
-            </Nav.Link>
-            <Nav.Link
-              as={Button}
-              variant="success"
-              // onClick={() => history.push("/signup")}
-              active
-              size="sm"
-            >
-             <Link to="/signup">Register</Link>
-            </Nav.Link>
+            {
+              isAuthenticated ? 
+              (
+                <Fragment>
+                <Nav.Link
+                  className="d-flex align-items-center justify-content-between"
+                  style={{ pointerEvents: "unset", cursor: "text" }}
+                >
+                Welcome,
+               </Nav.Link>
+              <Nav.Link
+               as={Link}
+               style={{ marginRight: "10px", marginLeft: "-10px" }}
+               className="text-dark"
+               to="/dashboard/profile"
+              >
+                <strong>{user.displayName}</strong>
+              </Nav.Link>
+              <Nav.Link
+                as={Button}
+                variant="success"
+                active
+                style={{ marginRight: "5px" }}
+                size="sm"
+                onClick={() => navigate("/dashboard")}
+                className="text-white"
+              >
+                 Dashboard
+              </Nav.Link>
+              <Nav.Link
+                as={Button}
+                variant="primary"
+                active
+                style={{ marginRight: "5px" }}
+                size="sm"
+                className="text-white"
+                onClick={() => dispatch(signOutUser())}
+              >
+              LogOut
+              </Nav.Link>
+                </Fragment>
+              ):
+              (
+               <Fragment>
+              <Nav.Link
+                as={Button}
+                variant="primary"
+                active
+                style={{ marginRight: "5px" }}
+                size="sm"
+                className="text-white"
+                onClick={() =>navigate("/login")}
+                 >
+                  Login
+              </Nav.Link>
+              <Nav.Link
+                as={Button}
+                variant="success"
+                onClick={() =>navigate("/signup")}
+                active
+                size="sm"
+                className="text-white"
+              >
+              Register
+              </Nav.Link>
+               </Fragment>
+              )
+
+            }
+           
           
       
       </Nav>

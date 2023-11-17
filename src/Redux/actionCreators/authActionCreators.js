@@ -1,4 +1,5 @@
 import * as types from "../actionsTypes/authActionsTypes";
+import fire from "../../config/firebase";
 
 const loginUser = (payload)=>{
   return{
@@ -13,20 +14,59 @@ const logoutUser = () =>{
    }
 }
 
-
-
-export const signInUser = (email,password) =>(dispatch) =>{
-
-  console.log(email,password)
+export const signInUser = (email,password,setSuccess) =>(dispatch) =>{
+   fire.auth().signInWithEmailAndPassword(email,password).then((user)=>{
+    dispatch(loginUser({
+      uid: user.user.uid,
+      email: user.user.email,
+      displayName: user.user.displayName,
+    }));
+    setSuccess(true);
+  }).catch(()=>{
+    alert("هناك خطأ");
+   });
 
 }
-export const signUpUser = (name,email,password) =>(dispatch) =>{
-
-  console.log(name,email,password)
+export const signUpUser = (name,email,password ,setSuccess) =>(dispatch) =>{
+  fire.auth().createUserWithEmailAndPassword(email,password).then((user)=>{
+    fire.auth().currentUser.updateProfile({
+      displayName:name,
+    }).then(()=>{
+      const currenUser = fire.auth().currentUser;
+      dispatch(loginUser({
+        uid: currenUser.uid,
+        email: currenUser.email,
+        name: currenUser.displayName,
+      }));
+      setSuccess(true);
+    }).catch((error)=>{
+        console.log(error);
+    })
+  }).catch((error)=>{
+    console.log(error);
+    if (error.code === "auth/email-already-in-use") {
+      alert("Email Already Exists!");
+    }
+    if (error.code === "auth/weak-password") {
+      alert("Weak Password");
+    }
+  })
 
 }
-export const signOutUser = (name,email,password) =>(dispatch) =>{
+export const signOutUser = () =>(dispatch) =>{
+  fire.auth().signOut().then(()=>{
+    dispatch(logoutUser());
+  });
+}
 
-  console.log(name,email,password)
-
+export const checkIsLoggedIn =() => dispatch =>{
+  fire.auth().onAuthStateChanged((user)=>{
+    if(user){
+     dispatch(loginUser({
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+     }));
+    }
+  });
 }

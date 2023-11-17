@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Link} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import { signInUser } from "../../Redux/actionCreators/authActionCreators";
 import { useDispatch } from "react-redux";
 
@@ -8,9 +8,10 @@ const Login = () => {
 
     const [email ,setEmail] = useState('');
     const [password ,setPassword] = useState('');
+    const [success , setSuccess] = useState(false);
     
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const handelSubmit =(e) =>{
       e.preventDefault();
       if(!email || !password){
@@ -18,9 +19,14 @@ const Login = () => {
         return;
       }
 
-      dispatch(signInUser(email,password));
-    }
-
+      dispatch(signInUser(email,password, setSuccess));
+    };
+    
+    useEffect(()=>{
+      if(success){
+        navigate("/dashboard")
+      }
+    },[success])
 
     return (
     <Container>
