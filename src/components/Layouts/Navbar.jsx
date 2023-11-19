@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Button, Nav, Navbar } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { signOutUser } from "../../Redux/actionCreators/authActionCreators";
+import { signOutUser } from "../../Redux/actionCreators/authActions";
 import { useDispatch } from "react-redux";
 
 const NavbarComponent =()=>{

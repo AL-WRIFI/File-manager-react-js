@@ -1,7 +1,8 @@
 import React from "react";
-import { Col ,Button} from "react-bootstrap";
-import { faFileUpload ,faFileAlt ,faFolderPlus} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Col } from "react-bootstrap";
+import CreateFolder from "../ModalForms/CreateFolder";
+import CreateFile from "../ModalForms/CreateFile";
+import UploadFile from "../ModalForms/UploadFile";
 
 const SubNav = () => {
   return (
@@ -9,31 +10,11 @@ const SubNav = () => {
        <>
           <p>Root</p>
           <div className="ml-auto col-md-5 d-flex justify-content-end">
-          <Button
-            // onClick={() => setShowModal(true)}
-            variant="outline-dark"
-            className="border-1 d-flex align-items-center justify-content-between rounded-2"
-           >
-            <FontAwesomeIcon icon={faFileUpload} />
-            &nbsp; Upload File
-          </Button>
-          <Button
-            // onClick={() => setShowModal(true)}
-            variant="outline-dark"
-            className="border-1 d-flex align-items-center justify-content-between rounded-2"
-           >
-            <FontAwesomeIcon icon={faFileAlt} />
-             &nbsp; Create File
-          </Button>
-          <Button
-            // onClick={() => setShowModal(true)}
-            variant="outline-dark"
-            className="border-1 d-flex align-items-center justify-content-between rounded-2"
-           >
-            <FontAwesomeIcon icon={faFolderPlus} />
-             &nbsp; Create Folder
-          </Button>
-            
+            <UploadFile  />
+            &nbsp;
+            <CreateFile  />
+            &nbsp;
+            <CreateFolder  />
           </div>
         </>
   

@@ -1,7 +1,20 @@
 import React,{ Fragment } from "react";
+import { faFolder, faFileAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 
 
-function ShowItems({title , items}){
+function ShowItems({title , items ,type}){
+
+    const navigate = useNavigate();
+    const handleDoubleClick= (itemId)=>{
+     if(type === "folder"){
+        navigate(`/dashboard/folder/${itemId}`)
+     }else{
+        alert("FILE")
+     }
+
+    }
 
     return(
         <Fragment>
@@ -10,8 +23,13 @@ function ShowItems({title , items}){
                 <div className="row gap-2 p-4 flex-wrap">
                    {items.map((el,idx)=>{
                       return(
-                        <p key={idx*55} className="col-md-2 p-2 ext-center border">
-                            {el}
+                        <p key={idx*55} className="col-md-2 py-3 text-center d-flex flex-column border"
+                           onDoubleClick={()=>handleDoubleClick(el.docId)}>
+                            {type === "folder" ?
+                               (<FontAwesomeIcon icon={faFolder} size="4x" className="mb-3"/>):
+                               (<FontAwesomeIcon icon={faFileAlt} size="4x" className="mb-3"/>) 
+                            }
+                            {el.data.name}
                         </p>
                       );})}
                 </div>

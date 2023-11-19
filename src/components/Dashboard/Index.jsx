@@ -1,16 +1,27 @@
 import React,{ Fragment } from "react";
 import ShowItems from "./ShowItems";
+import { useSelector } from "react-redux";
 
 function Index(){
 
-    const folder = ["folder 1" ,"folder 2", "folder 3" ];
-    const files = [" file 1" ," file 2", " file 3" ];
-
+    const files = [{data:{name:" file 1"}} ,{data:{name:" file 2"}}, {data:{name:" file 3"}} ];
+    const {isLoading , userFolders} = useSelector((state)=>({
+        isLoading : state.fileFolder.isLoading,
+        userFolders : state.fileFolder.userFolders,
+    }));
     return(
         <Fragment>
             <div className="col-md-12 w-100">
-                <ShowItems title="folder" items={folder}/>
-                <ShowItems title="file" items={files}/>
+                {
+                    isLoading ? (
+                        <h1 className="display-1 my-5 text-center">Loading...</h1>
+                     ) : ( 
+                        <>
+                        <ShowItems title="folder" type="folder" items={userFolders}/>
+                        <ShowItems title="file" type="file" items={files}/>
+                        </>
+                    )
+                } 
             </div>
         </Fragment>
     )

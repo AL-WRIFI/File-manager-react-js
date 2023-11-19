@@ -1,11 +1,13 @@
 import NavbarComponent from './components/Layouts/Navbar'
-import {Route , Routes} from "react-router-dom";
+import {BrowserRouter,  Router, Route ,Switch} from "react-router-dom";
 import Login from "./components/authentication/Login";
 import Register from "./components/authentication/Register";
 import Dashboard from './components/Dashboard/Dashboard';
-import { checkIsLoggedIn } from "./Redux/actionCreators/authActionCreators";
+import { checkIsLoggedIn } from "./Redux/actionCreators/authActions";
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import FolderComponent from "./components/Dashboard/FolderComponent/FolderComponent";
+
 
 function App() {
   
@@ -18,11 +20,16 @@ function App() {
   return (
     <>
       <NavbarComponent />
-      <Routes>
-        <Route  path="/login" element={<Login />} />
-        <Route  path="/signup" element={<Register />} />
-        <Route  path="/dashboard" element={<Dashboard />} />
-      </Routes>
+      <BrowserRouter>
+      <Router>
+      <Switch>
+        <Route  path="/login"  ><Login /></Route>
+        <Route  path="/signup" ><Register /></Route>
+        <Route  path="/dashboard" ><Dashboard /></Route>
+        {/* <Route path="dashboard/folder/:folderId" element={<FolderComponent />}/> */}
+        </Switch>
+      </Router>
+      </BrowserRouter>
     </>
   )
 }

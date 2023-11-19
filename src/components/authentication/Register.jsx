@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate} from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { signUpUser } from "../../Redux/actionCreators/authActionCreators";
+import { signUpUser } from "../../Redux/actionCreators/authActions";
 
 
 const Register = () => {
