@@ -1,10 +1,11 @@
 import React, { Fragment, useEffect } from "react";
 import { useSelector ,shallowEqual, useDispatch} from "react-redux";
-import { BrowserRouter as Router, Route ,useNavigate} from "react-router-dom";
+import { Outlet, useNavigate} from "react-router-dom";
 import SubNav from "./SubNav";
-import Index from "./Index";
+
 import { gitFolders } from "../../Redux/actionCreators/filefoldersActions";
-import FolderComponent from "./FolderComponent/FolderComponent";
+import { gitFiles } from "../../Redux/actionCreators/filefoldersActions";
+
 const Dashboard =()=>{
 
 const { isAuthenticated , isLoading, userId } = useSelector((state) =>({ 
@@ -25,6 +26,7 @@ useEffect(()=>{
 useEffect(()=>{
     if( userId && isLoading){
         dispatch(gitFolders(userId));
+        dispatch(gitFiles(userId));
     }
 },[isLoading,userId,dispatch])
 
@@ -32,13 +34,7 @@ useEffect(()=>{
     return(
       <Fragment> 
         <SubNav />
-        <Router>
-            <Route path="/"  >
-                <Index/>
-            </Route>
-            {/* <Route path="/folder/:folderId" Component={FolderComponent}/> */}
-            
-        </Router>
+        <Outlet/>
      </Fragment>
     );
 }

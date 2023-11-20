@@ -1,31 +1,85 @@
 import { faFileAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 // import { toast } from "react-toastify";
-// import { addFolderUser } from "../../redux/actionCreators/filefoldersActionCreators";
+import { createFile } from "../../Redux/actionCreators/filefoldersActions";
 
 const CreateFile = () => {
 
+  const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
-  const [folderName, setFolderName] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [success, setSuccess] = useState(false);
   
   const toggle = () => {
     setShowModal(!showModal);
   };
-  const dispatch = useDispatch();
-//   const { userId, userFolders } = useSelector(
-//     (state) => ({
-//       userId: state.auth.userId,
-//       userFolders: state.filefolders.userFolders,
-//     }),
-//     shallowEqual
-//   );
+  const { userFiles , user ,currentFolder ,currentFolderData} = useSelector((state)=>({
+    userFiles: state.fileFolder.userFiles,
+    user : state.auth.user,
+    currentFolder : state.fileFolder.currentFolder,
+    currentFolderData : state.fileFolder.userFolders.find((folder)=> folder.docId === state.fileFolder.currentFolder),
 
-  const handleFolderSubmit = (e) => {
-   
+  }),shallowEqual);
+
+  const checkFileAlreadyExists =(name) =>{
+    const fileExists = userFiles
+      .filter((file)=> file.data.parent === currentFolder)
+      .find((file)=> file.data.name === name);
+    if(fileExists){
+       return true; 
+    }else{ 
+      return false;
+    }
+  }
+
+  const handleFileSubmit = (e) => {
+   e.preventDefault();
+   if(fileName){
+    if(fileName.length > 3){
+      let extention = false;
+      if(fileName.split(".").length >1){
+        extention = true;
+      }
+        if(!checkFileAlreadyExists(fileName)){
+            alert("Created Folder "+fileName);
+            const data = {
+                createdAt: new Date(),
+                createdBy: user.displayName,
+                lastAccessed: null,
+                name: extention ? fileName : `${fileName}.txt`,
+                path: currentFolder === "root" ? [] : [...currentFolderData.data.path,currentFolder],
+                parent: currentFolder,
+                updatedAt: new Date(),
+                userId: user.uid,
+                extent: extention ? fileName.split(".")[1] : "txt",
+                data: "",
+                url: "",
+            }
+            console.log(data);
+            dispatch(createFile(data));
+            toggle();
+        }else{
+            alert("File already Exists");
+        }
+    }else{
+        alert("File name must be at least 3 Cher");
+    }
+   }else{
+    alert("File Name cannot by empty");
+   }
   };
+
+  useEffect(()=>{
+    if(success){
+      setFileName("");
+      setShowModal(false);
+      setSuccess(false);
+    }
+  },[success])
+  
   return (
     <>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -40,13 +94,13 @@ const CreateFile = () => {
           </Button>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleFolderSubmit}>
+          <Form onSubmit={handleFileSubmit}>
             <Form.Group controlId="formBasicFolderName" className="my-2">
               <Form.Control
                 type="text"
-                placeholder="Enter folder name..."
-                value={folderName}
-                onChange={(e) => setFolderName(e.target.value)}
+                placeholder="File Name e,g txt..."
+                value={fileName}
+                onChange={(e) => setFileName(e.target.value)}
               />
             </Form.Group>
             <Form.Group controlId="formBasicFolderSubmit" className="mt-5">

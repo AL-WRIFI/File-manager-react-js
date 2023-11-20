@@ -1,6 +1,6 @@
 import { faFolderPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { createFolder } from "../../Redux/actionCreators/filefoldersActions";
@@ -10,16 +10,26 @@ const CreateFolder = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [folderName, setFolderName] = useState("");
-  
-  const { userFolders , user ,currentFolder} = useSelector((state)=>({
+  // const [success, setSuccess] = useState(false);
+
+  const { userFolders , user ,currentFolder ,currentFolderData} = useSelector((state)=>({
     userFolders: state.fileFolder.userFolders,
     user : state.auth.user,
-    currentFolder : state.fileFolder.currentFolder, 
+    currentFolder : state.fileFolder.currentFolder,
+    currentFolderData : state.fileFolder.userFolders.find((folder)=> folder.docId === state.fileFolder.currentFolder),
+
   }),shallowEqual);
 
   const checkFolderAlreadyExists =(name) =>{
-    const folderExists = userFolders.find((folder)=> folder.name === name);
-    if(folderExists){ return true; }else{ return false; }
+    const folderExists = userFolders
+      .filter((folder)=> folder.data.parent === currentFolder)
+      .find((folder)=> folder.data.name === name);
+      // console.log(folderExists)
+    if(folderExists){
+       return true; 
+    }else{ 
+      return false;
+    }
   }
 
   const toggle = () => {
@@ -39,7 +49,7 @@ const CreateFolder = () => {
                 createdBy: user.displayName,
                 lastAccessed: null,
                 name: folderName,
-                path: currentFolder === "root" ? [] : [" parent folder"],
+                path: currentFolder === "root" ? [] : [...currentFolderData.data.path,currentFolder],
                 parent: currentFolder,
                 updatedAt: new Date(),
                 userId: user.uid,
@@ -56,7 +66,16 @@ const CreateFolder = () => {
     alert("Folder Name cannot by empty");
    }
   };
-  return (
+
+  // useEffect(()=>{
+  //   if(success){
+  //     setFolderName("");
+  //     setShowModal(false);
+  //     setSuccess(false);
+  //   }
+  //  },[success])
+
+  return(
     <>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header>

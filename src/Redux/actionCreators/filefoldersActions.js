@@ -2,25 +2,49 @@ import * as types from "../actionsTypes/filefoldersActionsTypes";
 import fire from "../../config/firebase";
 
 
+// FOLDERS
 const addFolder = (payload) => ({
   type: types.CREATE_FOLDER,
-  payload
+  payload,
 });
 const addFolders = (payload) => ({
   type: types.ADD_FOLDER,
-  payload
+  payload,
 });
 const setLoading = (payload) => ({
   type: types.SET_LOADING,
   payload,
 });
+
+const setChangeFolder=(payload)=>({
+  type: types.CHANGE_FOLDER,
+  payload,
+});
+
+
+// FILES
+const addFile= (payload)=>({
+  type: types.CREATE_FILES,
+  payload,
+})
+const addFiles= (payload)=>({
+  type: types.ADD_FILES,
+  payload,
+})
+
+
+
+// FOLDERS
 export const createFolder = (data) =>(dispatch)=>{
   fire.firestore().collection('folders').add(data).then( async folder=>{
     const folderData = await (await folder.get()).data();
     const folderId = folder.id; 
     dispatch(addFolder({ data:folderData , docId:folderId }));
+    // setSuccess(true);
+  }).catch((error)=>{
+    console.log(error)
   });
-}
+};
 
 export const gitFolders = (userId) => (dispatch)=>{
   dispatch(setLoading(true))
@@ -30,11 +54,42 @@ export const gitFolders = (userId) => (dispatch)=>{
         data: folder.data(),
         docId: folder.id,
       })); 
-      dispatch(addFolders(foldersData));
       dispatch(setLoading(false)); 
+      dispatch(addFolders(foldersData));
     });
-}
+};
 
+export const changeFolder =(folderId) => (dispatch)=>{
+  dispatch(setChangeFolder(folderId));
+};
+
+// FILES
+export const gitFile= (userId)=>(dispatch)=>{
+  console.log(userId);
+}
+export const createFile = (data ,setSuccess) =>(dispatch)=>{
+  fire.firestore().collection('files').add(data).then( async file=>{
+    const fileData = await (await file.get()).data();
+    const filerId = file.id; 
+    dispatch(addFile({ data:fileData , docId:filerId }));
+    // setSuccess(true);
+  }).catch(()=>{
+    // setSuccess(false);
+  });
+};
+
+export const gitFiles = (userId) => (dispatch)=>{
+  dispatch(setLoading(true))
+  fire.firestore().collection("files").where("userId","==",userId).get().then(
+    async (files)=>{
+      const fileData = await files.docs.map((file)=>({
+        data: file.data(),
+        docId: file.id,
+      })); 
+      // dispatch(setLoading(false)); 
+      dispatch(addFiles(fileData));
+    });
+};
 
 // const setAdminFiles = (data) => ({
 //   type: SET_ADMIN_FILES,
