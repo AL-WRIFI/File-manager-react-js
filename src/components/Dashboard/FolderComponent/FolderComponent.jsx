@@ -23,14 +23,20 @@ const FolderComponent=()=>{
     return(
         <Fragment>
            {
-             childFolders.length > 0 ? 
-             (<>
-             <ShowItems title="folder" type="folder" items={childFolders}/>
-             <ShowItems title="file" type="file" items={childFiles}/>
-              </>)
-             
+             childFolders.length > 0 || childFiles.length > 0 ? 
+             (
+               <Fragment>          
+                 {childFolders.length > 0 &&(
+                    <ShowItems title="folder" type="folder" items={childFolders}/>
+                    )};  
+                 {childFiles.length > 0 &&(
+                    <ShowItems title="file" type="file" items={childFiles}/>
+                    )};  
+               </Fragment>
+              )
             :(<p className="text-center my-5"> Empty Folder </p>)
-           }
+           } 
+           
         </Fragment>
     )
     

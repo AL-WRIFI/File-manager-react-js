@@ -12,9 +12,8 @@ const SubNav = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { userFolders , user ,currentFolder ,currentFolderData} = useSelector((state)=>({
+  const { userFolders ,currentFolder ,currentFolderData} = useSelector((state)=>({
     userFolders: state.fileFolder.userFolders,
-    user : state.auth.user,
     currentFolder : state.fileFolder.currentFolder,
     currentFolderData : state.fileFolder.userFolders.find(
       (folder)=> folder.docId === state.fileFolder.currentFolder),

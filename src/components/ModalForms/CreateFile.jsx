@@ -24,7 +24,8 @@ const CreateFile = () => {
 
   }),shallowEqual);
 
-  const checkFileAlreadyExists =(name) =>{
+  const checkFileAlreadyExists =(name ,extention) =>{
+    !extention ? name = name +".txt":'';
     const fileExists = userFiles
       .filter((file)=> file.data.parent === currentFolder)
       .find((file)=> file.data.name === name);
@@ -43,7 +44,7 @@ const CreateFile = () => {
       if(fileName.split(".").length >1){
         extention = true;
       }
-        if(!checkFileAlreadyExists(fileName)){
+        if(!checkFileAlreadyExists(fileName,extention)){
             alert("Created Folder "+fileName);
             const data = {
                 createdAt: new Date(),

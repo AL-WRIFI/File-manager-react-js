@@ -7,6 +7,7 @@ import { checkIsLoggedIn } from "./Redux/actionCreators/authActions";
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import FolderComponent from "./components/Dashboard/FolderComponent/FolderComponent";
+import FileComponent from "./components/Dashboard/FileComponent/FileComponent";
 import Index from "./components/Dashboard/Index";
 
 
@@ -29,6 +30,7 @@ function App() {
         <Route  path="/dashboard" element={<Dashboard />}>
               <Route index element={<Index />} />
               <Route  path="folder/:folderId" element={<FolderComponent />}/>
+              <Route  path="file/:fileId" element={<FileComponent />}/>
         </Route>        
       </Routes>
     </>

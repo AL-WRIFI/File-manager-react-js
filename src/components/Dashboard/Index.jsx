@@ -19,7 +19,7 @@ function Index(){
                      ) : ( 
                         <>
                         <ShowItems title="folder" type="folder" items={userFolders}/>
-                        <ShowItems title="file" type="file" items={userFiles}/>
+                        <ShowItems title="file" type="file" items={userFiles.filter((files)=> files.data.url === "")}/>
                         </>
                     )
                 } 
