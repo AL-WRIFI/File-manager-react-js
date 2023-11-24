@@ -5,6 +5,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 // import { toast } from "react-toastify";
 import { createFile } from "../../Redux/actionCreators/filefoldersActions";
+import { toast } from "react-toastify";
 
 const CreateFile = () => {
 
@@ -45,7 +46,6 @@ const CreateFile = () => {
         extention = true;
       }
         if(!checkFileAlreadyExists(fileName,extention)){
-            alert("Created Folder "+fileName);
             const data = {
                 createdAt: new Date(),
                 createdBy: user.displayName,
@@ -60,16 +60,16 @@ const CreateFile = () => {
                 url: "",
             }
             console.log(data);
-            dispatch(createFile(data));
+            dispatch(createFile(data ,setSuccess));
             toggle();
         }else{
-            alert("File already Exists");
+          toast.error("File already Exists");
         }
     }else{
-        alert("File name must be at least 3 Cher");
+      toast.error("File name must be at least 3 Cher");
     }
    }else{
-    alert("File Name cannot by empty");
+    toast.error("File Name cannot by empty");
    }
   };
 

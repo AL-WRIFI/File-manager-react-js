@@ -49,7 +49,6 @@ const SubNav = () => {
               <li className="breadcrumb-item active" >
                 { currentFolderData?.data.name}
                 </li>
-
               </Fragment>
             ):(<li className="breadcrumb-item">Root</li> )}
           </ol>

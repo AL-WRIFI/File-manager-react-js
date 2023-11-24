@@ -28,7 +28,7 @@ const FolderComponent=()=>{
                <Fragment>          
                  {childFolders.length > 0 &&(
                     <ShowItems title="folder" type="folder" items={childFolders}/>
-                    )};  
+                    )}  
                  {childFiles.length > 0 &&(
                     <ShowItems title="file" type="file" items={childFiles}/>
                     )};  

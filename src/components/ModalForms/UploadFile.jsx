@@ -1,36 +1,80 @@
 import { faFileUpload, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-// import { toast } from "react-toastify";
-// import { addFolderUser } from "../../redux/actionCreators/filefoldersActionCreators";
+import { uploadFile } from "../../Redux/actionCreators/filefoldersActions";
+import { toast } from "react-toastify";
+
 
 const UploadFile = () => {
 
   const [showModal, setShowModal] = useState(false);
-  const [folderName, setFolderName] = useState("");
-  
+  const [file, setFile] = useState(null);
+  const [success, setSuccess] = useState(false);
+
   const toggle = () => {
     setShowModal(!showModal);
   };
   const dispatch = useDispatch();
-//   const { userId, userFolders } = useSelector(
-//     (state) => ({
-//       userId: state.auth.userId,
-//       userFolders: state.filefolders.userFolders,
-//     }),
-//     shallowEqual
-//   );
+  const { userFiles , user ,currentFolder ,currentFolderData} = useSelector((state)=>({
+    userFiles: state.fileFolder.userFiles,
+    user : state.auth.user,
+    currentFolder : state.fileFolder.currentFolder,
+    currentFolderData : state.fileFolder.userFolders.find((folder)=> folder.docId === state.fileFolder.currentFolder),
 
-  const handleFolderSubmit = (e) => {
-   
+  }),shallowEqual);
+
+  const checkFileAlreadyExists =(name) =>{
+    const fileExists = userFiles
+      .filter((file)=> file.data.parent === currentFolder)
+      .find((file)=> file.data.name === name);
+    if(fileExists){
+       return true; 
+    }else{ 
+      return false;
+    }
+  }
+
+  const handleUploadFileSubmit = (e) => {
+   e.preventDefault();
+   if(file){
+        if(!checkFileAlreadyExists(file.name)){
+            const data = {
+                createdAt: new Date(),
+                createdBy: user.displayName,
+                lastAccessed: null,
+                name: file.name ,
+                path: currentFolder === "root" ? [] : [...currentFolderData.data.path,currentFolder],
+                parent: currentFolder,
+                updatedAt: new Date(),
+                userId: user.uid,
+                extent: file.name.split(".")[1] ,
+                data: null,
+                url: "",
+            }
+            console.log(data);
+            dispatch(uploadFile(file,data ,setSuccess));
+        }else{
+          toast.error("File already Exists");
+        }
+    
+   }else{
+    toast.error("File  cannot by empty");
+   }
   };
+  useEffect(()=>{
+    if(success){
+      setShowModal(false);
+      setSuccess(false);
+    }
+  },[success])
+  
   return (
     <>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header>
-          <Modal.Title>Create Folder</Modal.Title>
+          <Modal.Title>Upload File</Modal.Title>
           <Button
             variant="white"
             style={{ cursor: "pointer" }}
@@ -40,18 +84,17 @@ const UploadFile = () => {
           </Button>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleFolderSubmit}>
+          <Form onSubmit={handleUploadFileSubmit}>
             <Form.Group controlId="formBasicFolderName" className="my-2">
               <Form.Control
-                type="text"
+                type="file"
                 placeholder="Enter folder name..."
-                value={folderName}
-                onChange={(e) => setFolderName(e.target.value)}
+                onChange={(e) => setFile(e.target.files[0])}
               />
             </Form.Group>
             <Form.Group controlId="formBasicFolderSubmit" className="mt-5">
               <Button type="submit" className="form-control" variant="primary">
-                Add Folder
+                Upload File
               </Button>
             </Form.Group>
           </Form>
@@ -63,7 +106,7 @@ const UploadFile = () => {
         className="border-1 d-flex align-items-center justify-content-between rounded-2"
       >
         <FontAwesomeIcon icon={faFileUpload} />
-             &nbsp; Create File
+             &nbsp; Upload File
       </Button>
     </>
   );

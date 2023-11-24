@@ -3,6 +3,7 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate} from "react-router-dom";
 import { signInUser } from "../../Redux/actionCreators/authActions";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const Login = () => {
 
@@ -15,7 +16,7 @@ const Login = () => {
     const handelSubmit =(e) =>{
       e.preventDefault();
       if(!email || !password){
-        alert(" الحقول اجباريه ");
+        toast.error(" الحقول اجباريه ");
         return;
       }
 

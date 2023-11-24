@@ -20,22 +20,27 @@ function ShowItems({title , items ,type}){
 
     return(
         <Fragment>
-            <div className="w-100">
-                <h4 className="text-center border-bottom py-2">{title}</h4>
-                <div className="row gap-2 p-4 flex-wrap">
-                   {items.map((el,idx)=>{
+            <h5>{title}</h5>
+                    <div className="row mt-3">
+                    {items.map((el,idx)=>{
                       return(
-                        <p key={idx*55} className="col-md-2 py-3 text-center d-flex flex-column border"
-                           onDoubleClick={()=>handleDoubleClick(el.docId)}>
-                            {type === "folder" ?
-                               (<FontAwesomeIcon icon={faFolder} size="4x" className="mb-3"/>):
-                               (<FontAwesomeIcon icon={faFileAlt} size="4x" className="mb-3"/>) 
-                            }
-                            {el.data.name}
-                        </p>
-                      );})}
-                </div>
-            </div>
+                        <div key={idx*55} onDoubleClick={()=>handleDoubleClick(el.docId)} className="col-12 col-lg-3">
+                            <div className="card shadow-none border radius-15">
+                                <div className="card-body">
+                                    <div className="d-flex align-items-center">
+                                        <div className="font-30 text-primary"><i className={type === "folder"? "bx bxs-folder" : "lni lni-empty-file"}></i>
+                                        </div>
+                                       
+                                    </div>
+                                    <h6 className="mb-0 text-primary">{el.data.name}</h6>
+                                    {type === "folder"? <small>143 files</small> : ""}
+                                </div>
+                            </div>
+                        </div>
+                  
+                      )})}
+                        
+                    </div>
         </Fragment>
     )
         

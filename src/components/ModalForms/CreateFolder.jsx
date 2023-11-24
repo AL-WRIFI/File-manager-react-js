@@ -4,13 +4,13 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { createFolder } from "../../Redux/actionCreators/filefoldersActions";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const CreateFolder = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [folderName, setFolderName] = useState("");
-  // const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const { userFolders , user ,currentFolder ,currentFolderData} = useSelector((state)=>({
     userFolders: state.fileFolder.userFolders,
@@ -24,7 +24,6 @@ const CreateFolder = () => {
     const folderExists = userFolders
       .filter((folder)=> folder.data.parent === currentFolder)
       .find((folder)=> folder.data.name === name);
-      // console.log(folderExists)
     if(folderExists){
        return true; 
     }else{ 
@@ -43,7 +42,6 @@ const CreateFolder = () => {
    if(folderName){
     if(folderName.length > 3){
         if(!checkFolderAlreadyExists(folderName)){
-            alert("Created Folder "+folderName);
             const data = {
                 createdAt: new Date(),
                 createdBy: user.displayName,
@@ -54,26 +52,26 @@ const CreateFolder = () => {
                 updatedAt: new Date(),
                 userId: user.uid,
             }
-            dispatch(createFolder(data));
+            dispatch(createFolder(data,setSuccess));
             toggle();
         }else{
-            alert("Folder already Exists");
+          toast.error("Folder already Exists");
         }
     }else{
-        alert("Folder name must be at least 3 Cher");
+      toast.error("Folder name must be at least 3 Cher");
     }
    }else{
-    alert("Folder Name cannot by empty");
+    toast.error("Folder Name cannot by empty");
    }
   };
 
-  // useEffect(()=>{
-  //   if(success){
-  //     setFolderName("");
-  //     setShowModal(false);
-  //     setSuccess(false);
-  //   }
-  //  },[success])
+  useEffect(()=>{
+    if(success){
+      // setFolderName("");
+      setShowModal(false);
+      setSuccess(false);
+    }
+   },[success])
 
   return(
     <>

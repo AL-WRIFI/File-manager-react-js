@@ -19,7 +19,6 @@ const { isAuthenticated , isLoading, userId } = useSelector((state) =>({
     userId: state.auth.user.uid,
 }),shallowEqual);
 
-
 useEffect(()=>{
     if(!isAuthenticated){
         navigate("/login");
@@ -41,7 +40,8 @@ useEffect(()=>{
 
     return(
       <Fragment>
-        { showSubNav ? <SubNav /> : ""} 
+        <SubNav />
+        {/* { showSubNav ? <SubNav /> : ""}  */}
         <Outlet/>
      </Fragment>
     );

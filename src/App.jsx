@@ -9,7 +9,9 @@ import { useDispatch } from 'react-redux';
 import FolderComponent from "./components/Dashboard/FolderComponent/FolderComponent";
 import FileComponent from "./components/Dashboard/FileComponent/FileComponent";
 import Index from "./components/Dashboard/Index";
-
+import FileManger from './FileManger';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   
@@ -21,16 +23,18 @@ function App() {
 
   return (
     <>
+    
       <NavbarComponent />
-      
+      <ToastContainer/>
       <Routes>
         
         <Route  path="/login" element={<Login/>} />
         <Route  path="/signup" element={<Register />}/>
         <Route  path="/dashboard" element={<Dashboard />}>
-              <Route index element={<Index />} />
-              <Route  path="folder/:folderId" element={<FolderComponent />}/>
-              <Route  path="file/:fileId" element={<FileComponent />}/>
+              <Route path='' element={<Index />} >
+                <Route  path="folder/:folderId" element={<FolderComponent />}/>
+                <Route  path="file/:fileId" element={<FileComponent />}/>
+              </Route>
         </Route>        
       </Routes>
     </>

@@ -1,43 +1,40 @@
-import React,{ Fragment } from "react";
-import { faArrowLeft, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Col, Row } from "react-bootstrap";
-import { useNavigate } from "react-router";
+import { faSave, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { updateFileData } from "../../../Redux/actionCreators/filefoldersActions";
 
+const Header = ({ fileName, fileId, fileData, prevFileData }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-function Header({fileName}){
-    const navigate = useNavigate();
+  return (
+    <nav className="navbar navbar-expand-lg mt-1 navbar-light bg-white shadow-sm">
+      <p className="navbar-brand my-0 fw-bold ms-5">{fileName}</p>
+      {fileData !== prevFileData && (
+        <h5 className="my-0 fw-bold ms-2 text-danger">*[modefied]</h5>
+      )}
 
-   const pushItBack =()=>{
-
-   }
-    return(
-        <Row className="px-5 d-flex align-items-center border-bottom mb-3 justify-content-between border-2 py-2 pt-3">
-      <Col md={5} className="d-flex align-items-center justify-content-between">
-        <h5 className="font-weight-bold">
-          {fileName}
-          {/* {data.trim() !== prevData.trim() && " [* . Modified]"} */}
-        </h5>
-      </Col>
-      <Col md={5} className="d-flex align-items-center justify-content-end">
-        <Button
-          variant="success"
-        //   disabled={data.trim() === prevData.trim()}
-        //   onClick={() => saveFile()}
-        >
-          <FontAwesomeIcon icon={faSave} />
-          &nbsp; Save
-        </Button>
-        &nbsp;
-        <Button variant="dark" onClick={() => navigate(-1)}>
-          <FontAwesomeIcon icon={faArrowLeft} />
-          &nbsp; Go Back
-        </Button>
-      </Col>
-    </Row>
-    )
-        
-    
-}
+      <ul className="navbar-nav ms-auto me-5">
+        <li className="nav-item mx-2">
+          <button
+            className="btn btn-success"
+            disabled={fileData === prevFileData}
+            onClick={() => {
+              dispatch(updateFileData(fileId, fileData));
+            }}
+          >
+            <FontAwesomeIcon icon={faSave} /> Save
+          </button>
+        </li>
+        <li className="nav-item">
+          <button className="btn btn-dark" onClick={() => navigate(-1)}>
+            <FontAwesomeIcon icon={faArrowLeftLong} /> Go Back
+          </button>
+        </li>
+      </ul>
+    </nav>
+  );
+};
 
 export default Header;

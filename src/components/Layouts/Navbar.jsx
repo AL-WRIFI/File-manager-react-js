@@ -4,12 +4,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { signOutUser } from "../../Redux/actionCreators/authActions";
 import { useDispatch } from "react-redux";
+import { changeFolder } from "../../Redux/actionCreators/filefoldersActions";
 
 const NavbarComponent =()=>{
     
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector(state =>state.auth);
+
+  const handleToDashboard =()=>{
+    dispatch(changeFolder("root"));
+    navigate("/dashboard");
+}
 
   return (
     <Navbar bg="white"
@@ -48,7 +54,7 @@ const NavbarComponent =()=>{
                 active
                 style={{ marginRight: "5px" }}
                 size="sm"
-                onClick={() => navigate("/dashboard")}
+                onClick={handleToDashboard}
                 className="text-white"
               >
                  Dashboard
