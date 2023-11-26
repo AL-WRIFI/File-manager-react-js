@@ -1,7 +1,9 @@
 const express = require('express');
-const multer = require('multer');
+const cors = require('cors'); 
 const sharp = require('sharp');
-const cors = require('cors'); // استخدام مكتبة CORS
+const multer = require('multer');
+
+
 const app = express();
 const port = 3000;
 
