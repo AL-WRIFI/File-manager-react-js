@@ -53,7 +53,7 @@ const UploadFile = () => {
                 data: null,
                 url: "",
             }
-            console.log(data);
+            console.log(file);
             dispatch(uploadFile(file,data ,setSuccess));
         }else{
           toast.error("File already Exists");

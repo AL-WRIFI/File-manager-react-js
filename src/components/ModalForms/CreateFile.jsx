@@ -58,6 +58,7 @@ const CreateFile = () => {
                 extent: extention ? fileName.split(".")[1] : "txt",
                 data: "",
                 url: "",
+                thumbnailUrl:"",
             }
             console.log(data);
             dispatch(createFile(data ,setSuccess));

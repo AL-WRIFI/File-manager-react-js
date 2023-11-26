@@ -28,9 +28,14 @@ function ShowItems({title , items ,type}){
                             <div className="card shadow-none border radius-15">
                                 <div className="card-body">
                                     <div className="d-flex align-items-center">
+                                        {el.data.extent === "png" ? (
+                                        <div className="font-30 text-primary">
+                                            <img src={el.data.thumbnailUrl}  />
+                                        </div>)
+                                        :(
                                         <div className="font-30 text-primary"><i className={type === "folder"? "bx bxs-folder" : "lni lni-empty-file"}></i>
                                         </div>
-                                       
+                                        )}
                                     </div>
                                     <h6 className="mb-0 text-primary">{el.data.name}</h6>
                                     {type === "folder"? <small>143 files</small> : ""}

@@ -1,7 +1,13 @@
 import * as types from "../actionsTypes/filefoldersActionsTypes";
 import fire from "../../config/firebase";
 import { toast } from "react-toastify";
+import axios from 'axios';
+import b64toBlob from 'b64-to-blob';
+// import sharp from 'sharp';
+// import {reactsharp} from "react-sharp";
+// const sharp = require('sharp');
 
+// const sharp = require('sharp')
 
 // FOLDERS
 const addFolder = (payload) => ({
@@ -112,29 +118,80 @@ export const updateFileData = (fileId, data) => (dispatch) => {
     });
 };
 
-export const uploadFile = ( file, data, setSuccess) =>(dispatch)=>{
-  const uploadFileRef = fire.storage().ref(`files/${data.userId}/${data.name}`);
-  uploadFileRef.put(file).on("state_changed", (snapshot)=>{
-    const progress = Math.round(
-      (snapshot.bytesTransferred / snapshot.totalBytes) *100
-    );
-    console.log("Uploading "+progress+"%")
-  },
+// export const uploadFile = ( file, data, setSuccess) =>(dispatch)=>{
+//   const uploadFileRef = fire.storage().ref(`files/${data.userId}/${data.name}`);
+//   uploadFileRef.put(file).on("state_changed", (snapshot)=>{
+//     const progress = Math.round(
+//       (snapshot.bytesTransferred / snapshot.totalBytes) *100
+//     );
+//     console.log("Uploading "+progress+"%")
+//   },
 
-  (error)=>{console.log(error)},
-    async()=>{
-    const fileUrl = await uploadFileRef.getDownloadURL();
-    const fullData = { ...data, url:fileUrl};
+//   (error)=>{console.log(error)},
+//     async()=>{
+//     const fileUrl = await uploadFileRef.getDownloadURL();
+//     const fullData = { ...data, url:fileUrl};
     
-    fire.firestore().collection('files').add(fullData).then( async (file)=>{
+//     fire.firestore().collection('files').add(fullData).then( async (file)=>{
       
-      const fileData = await (await file.get()).data();
-      const filerId = file.id;       
-      dispatch(addFile({ data:fileData , docId:filerId }));
-      toast.success("File Uploaded Successfully");
-      setSuccess(true);
+//       const fileData = await (await file.get()).data();
+//       const filerId = file.id;       
+//       dispatch(addFile({ data:fileData , docId:filerId }));
+//       toast.success("File Uploaded Successfully");
+//       setSuccess(true);
 
-    }).catch(()=>{setSuccess(false)})
+//     }).catch(()=>{setSuccess(false)})
   
-  })
+//   })
+// };
+
+
+export const uploadFile = (file, data, setSuccess) => (dispatch) => {
+  const uploadFileRef = fire.storage().ref(`files/${data.userId}/${data.name}`);
+  uploadFileRef.put(file).on(
+    "state_changed",
+    (snapshot) => {
+      const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      console.log("Uploading " + progress + "%");
+    },
+    (error) => {
+      console.log(error);
+    },
+    async () => {
+     
+      const fileUrl = await uploadFileRef.getDownloadURL();
+      const fullData = { ...data, url: fileUrl };
+      console.log(file.type);
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await axios.post('http://localhost:3000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      const { resizedImageBuffer } = response.data;
+      const thumbnailBuffer=`data:image/jpeg;base64,${resizedImageBuffer}`;
+      
+      const thumbnailRef = fire.storage().ref(`thumbnails/${data.userId}/${data.name}`);
+      const blob = await (await fetch(thumbnailBuffer)).blob();
+      console.log("------------------",blob);
+      await thumbnailRef.put(blob);
+
+      const thumbnailUrl = await thumbnailRef.getDownloadURL();
+      const fullDataWithThumbnail = { ...fullData, thumbnailUrl };
+
+      fire.firestore().collection('files').add(fullDataWithThumbnail).then(async (file) => {
+        const fileData = await (await file.get()).data();
+        const fileId = file.id;
+        dispatch(addFile({ data: fileData, docId: fileId }));
+        toast.success("File Uploaded Successfully");
+        setSuccess(true);
+      }).catch(() => {
+        setSuccess(false);
+      });
+    }
+  );
 };
