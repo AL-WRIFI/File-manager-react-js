@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { changeFolder } from "../../Redux/actionCreators/filefoldersActions";
-
+import DropdownItems from "./DropdownItems";
+// import './fileItem.css';
 function ShowItems({title , items ,type}){
 
     const navigate = useNavigate();
@@ -21,12 +22,16 @@ function ShowItems({title , items ,type}){
     return(
         <Fragment>
             <h5>{title}</h5>
-                    <div className="row mt-3">
+                   
+                <div className="row mt-3">
+                    
+
                     {items.map((el,idx)=>{
                       return(
-                        <div key={idx*55} onDoubleClick={()=>handleDoubleClick(el.docId)} className="col-12 col-lg-3">
+                        <div key={idx*55} className="col-12 col-lg-3">
                             <div className="card shadow-none border radius-15">
-                                <div className="card-body">
+                                <DropdownItems file={el} />
+                                <div className="card-body" onDoubleClick={()=>handleDoubleClick(el.docId)} >
                                     <div className="d-flex align-items-center">
                                         {el.data.extent === "png" ? (
                                         <div className="font-30 text-primary">

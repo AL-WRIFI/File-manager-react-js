@@ -25,7 +25,7 @@ const CreateFile = () => {
 
   }),shallowEqual);
 
-  const checkFileAlreadyExists =(name ,extention) =>{
+   const checkFileAlreadyExists =(name ,extention) =>{
     !extention ? name = name +".txt":'';
     const fileExists = userFiles
       .filter((file)=> file.data.parent === currentFolder)

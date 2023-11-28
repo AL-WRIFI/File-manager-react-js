@@ -42,7 +42,78 @@ const setFileData = (payload) => ({
   type: types.SET_FILE_DATA,
   payload,
 });
+const copyFileBuffer = (payload) => ({
+  type: types.COPY_FILES_TOBUFFER,
+  payload,
+});
 
+export const copyFile=( file )=>(dispatch)=>{
+    dispatch(copyFileBuffer({file: file }))
+}
+
+export const pasteFile=(data)=>(dispatch)=>{
+    
+    fire.firestore().collection('files').add(data).then( async file =>{
+      const fileData = await (await file.get()).data();
+      const filerId = file.id; 
+      dispatch(addFile({ data:fileData , docId:filerId }));
+      toast.success("Coped File Successfully"+file.name);
+    }).catch(()=>{
+      toast.error("Can Not Copy File ");
+
+    });
+    console.log(data);
+}
+
+// const setSelectedFiles =(item)=> ({
+  
+//       item,
+//       type:types.SET_SELECTED_FILES
+
+// })
+
+// const  unsetSelectedFiles=() =>({
+  
+//       type:types.UNSET_SELECTED_FILES,
+  
+// })
+
+// const  selectAllFiles =() =>({
+  
+//       type:types.SELECT_ALL_FILES
+  
+// })
+
+// const inverseSelectedFiles =() =>({
+  
+//       type:types.INVERSE_SELECTED_FILES
+  
+// })
+
+// const copyToBufferFiles =() =>({
+  
+//       type:types.COPY_FILES_TOBUFFER
+  
+// })
+
+// const cutToBufferFiles =() =>({
+  
+//       type:types.CUT_FILES_TOBUFFER
+  
+// })
+
+// const clearBufferFiles =() =>({
+  
+//       type:types.CLEAR_FILES_TOBUFFER
+  
+// })
+// const setSelectedFolder(path, history) {
+//   return {
+//       type: types.SET_SELECTED_FOLDER,
+//       path,
+//       history
+//   };
+// }
 
 // FOLDERS
 export const createFolder = (data ,setSuccess) =>(dispatch)=>{
