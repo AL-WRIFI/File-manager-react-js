@@ -5,7 +5,7 @@ import CreateFile from "../ModalForms/CreateFile";
 import UploadFile from "../ModalForms/UploadFile";
 import { Link, useNavigate } from "react-router-dom";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { changeFolder } from "../../Redux/actionCreators/filefoldersActions";
+import { changeFolder } from "../../Redux/actionCreators/FolderActions";
 
 const SubNav = () => {
 
@@ -13,10 +13,10 @@ const SubNav = () => {
   const dispatch = useDispatch();
 
   const { userFolders ,currentFolder ,currentFolderData} = useSelector((state)=>({
-    userFolders: state.fileFolder.userFolders,
-    currentFolder : state.fileFolder.currentFolder,
-    currentFolderData : state.fileFolder.userFolders.find(
-      (folder)=> folder.docId === state.fileFolder.currentFolder),
+    userFolders: state.Folders.userFolders,
+    currentFolder : state.Folders.currentFolder,
+    currentFolderData : state.Folders.userFolders.find(
+      (folder)=> folder.docId === state.Folders.currentFolder),
 
   }),shallowEqual);
 

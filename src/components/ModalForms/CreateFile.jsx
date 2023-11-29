@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 // import { toast } from "react-toastify";
-import { createFile } from "../../Redux/actionCreators/filefoldersActions";
+import { createFile } from "../../Redux/actionCreators/FileActions";
 import { toast } from "react-toastify";
 
 const CreateFile = () => {
@@ -18,10 +18,10 @@ const CreateFile = () => {
     setShowModal(!showModal);
   };
   const { userFiles , user ,currentFolder ,currentFolderData} = useSelector((state)=>({
-    userFiles: state.fileFolder.userFiles,
+    userFiles: state.Files.userFiles,
     user : state.auth.user,
-    currentFolder : state.fileFolder.currentFolder,
-    currentFolderData : state.fileFolder.userFolders.find((folder)=> folder.docId === state.fileFolder.currentFolder),
+    currentFolder : state.Folders.currentFolder,
+    currentFolderData : state.Folders.userFolders.find((folder)=> folder.docId === state.Folders.currentFolder),
 
   }),shallowEqual);
 
@@ -50,12 +50,13 @@ const CreateFile = () => {
                 createdAt: new Date(),
                 createdBy: user.displayName,
                 lastAccessed: null,
+                type: "File",
                 name: extention ? fileName : `${fileName}.txt`,
                 path: currentFolder === "root" ? [] : [...currentFolderData.data.path,currentFolder],
                 parent: currentFolder,
                 updatedAt: new Date(),
                 userId: user.uid,
-                extent: extention ? fileName.split(".")[1] : "txt",
+                extent: extention ? fileName.split(".").pop() : "txt",
                 data: "",
                 url: "",
                 thumbnailUrl:"",

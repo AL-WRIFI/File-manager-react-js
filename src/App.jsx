@@ -9,9 +9,9 @@ import { useDispatch } from 'react-redux';
 import FolderComponent from "./components/Dashboard/FolderComponent/FolderComponent";
 import FileComponent from "./components/Dashboard/FileComponent/FileComponent";
 import Index from "./components/Dashboard/Index";
-import FileManger from './FileManger';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Fragment } from 'react';
 
 function App() {
   
@@ -22,8 +22,7 @@ function App() {
   },[])
 
   return (
-    <>
-    
+    <Fragment>
       <NavbarComponent />
       <ToastContainer/>
       <Routes>
@@ -37,7 +36,7 @@ function App() {
               </Route>
         </Route>        
       </Routes>
-    </>
+    </Fragment>
   )
 }
 

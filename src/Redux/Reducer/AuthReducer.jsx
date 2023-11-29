@@ -1,4 +1,4 @@
-import * as types from "../Redux/actionsTypes/authActionsTypes";
+import * as types from "../actionsTypes/authActionsTypes";
 
 const initialState = {
     isAuthenticated:false,

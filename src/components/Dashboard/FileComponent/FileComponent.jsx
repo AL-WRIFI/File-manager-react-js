@@ -12,7 +12,7 @@ const FileComponent = () => {
   const navigate = useNavigate();
   const { currentFile, isAuthenticated } = useSelector(
     (state) => ({
-      currentFile: state.fileFolder.userFiles.find(
+      currentFile: state.Files.userFiles.find(
         (file) => file.docId === fileId
       ),
       isAuthenticated: state.auth.isAuthenticated,

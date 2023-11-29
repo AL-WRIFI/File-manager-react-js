@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { createFolder } from "../../Redux/actionCreators/filefoldersActions";
+import { createFolder } from "../../Redux/actionCreators/FolderActions";
 import { toast } from "react-toastify";
 
 const CreateFolder = () => {
@@ -13,11 +13,10 @@ const CreateFolder = () => {
   const [success, setSuccess] = useState(false);
 
   const { userFolders , user ,currentFolder ,currentFolderData} = useSelector((state)=>({
-    userFolders: state.fileFolder.userFolders,
+    userFolders: state.Folders.userFolders,
     user : state.auth.user,
-    currentFolder : state.fileFolder.currentFolder,
-    currentFolderData : state.fileFolder.userFolders.find((folder)=> folder.docId === state.fileFolder.currentFolder),
-
+    currentFolder : state.Folders.currentFolder,
+    currentFolderData : state.Folders.userFolders.find((folder)=> folder.docId === state.Folders.currentFolder),
   }),shallowEqual);
 
   const checkFolderAlreadyExists =(name) =>{
@@ -46,6 +45,7 @@ const CreateFolder = () => {
                 createdAt: new Date(),
                 createdBy: user.displayName,
                 lastAccessed: null,
+                type: "Folder", 
                 name: folderName,
                 path: currentFolder === "root" ? [] : [...currentFolderData.data.path,currentFolder],
                 parent: currentFolder,

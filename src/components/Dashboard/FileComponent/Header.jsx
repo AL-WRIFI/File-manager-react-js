@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { updateFileData } from "../../../Redux/actionCreators/filefoldersActions";
+import { updateFileData } from "../../../Redux/actionCreators/FileActions";
 
 const Header = ({ fileName, fileId, fileData, prevFileData }) => {
   const navigate = useNavigate();

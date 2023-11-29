@@ -3,17 +3,16 @@ import ShowItems from "./ShowItems";
 import { useSelector } from "react-redux";
 import Recentfile from "../../RecentFiles";
 import SidBar from "../../SidBar";
-import '../../File.css';
 import { Outlet } from "react-router";
 
 
 function Index(){
 
     const {isLoading , userFolders ,userFiles ,currentFolder} = useSelector((state)=>({
-        isLoading : state.fileFolder.isLoading,
-        userFolders : state.fileFolder.userFolders.filter(folder=> folder.data.parent === "root"),
-        userFiles : state.fileFolder.userFiles.filter(file=> file.data.parent === "root"),
-        currentFolder : state.fileFolder.currentFolder,
+        isLoading : state.Folders.isLoading,
+        userFolders : state.Folders.userFolders.filter(folder=> folder.data.parent === "root"),
+        userFiles : state.Files.userFiles.filter(file=> file.data.parent === "root"),
+        currentFolder : state.Folders.currentFolder,
     }));
 
     return(

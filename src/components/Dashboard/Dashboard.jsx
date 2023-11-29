@@ -3,8 +3,8 @@ import { useSelector ,shallowEqual, useDispatch} from "react-redux";
 import { Outlet, useLocation, useNavigate} from "react-router-dom";
 import SubNav from "./SubNav";
 
-import { gitFolders } from "../../Redux/actionCreators/filefoldersActions";
-import { gitFiles } from "../../Redux/actionCreators/filefoldersActions";
+import { gitFolders } from "../../Redux/actionCreators/FolderActions";
+import { gitFiles } from "../../Redux/actionCreators/FileActions";
 
 const Dashboard =()=>{
 
@@ -15,7 +15,7 @@ const dispatch = useDispatch();
 
 const { isAuthenticated , isLoading, userId } = useSelector((state) =>({ 
     isAuthenticated : state.auth.isAuthenticated ,
-    isLoading : state.fileFolder.isLoading,
+    isLoading : state.Folders.isLoading,
     userId: state.auth.user.uid,
 }),shallowEqual);
 

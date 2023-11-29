@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { signOutUser } from "../../Redux/actionCreators/authActions";
 import { useDispatch } from "react-redux";
-import { changeFolder } from "../../Redux/actionCreators/filefoldersActions";
+import { changeFolder } from "../../Redux/actionCreators/FolderActions";
 
 const NavbarComponent =()=>{
     

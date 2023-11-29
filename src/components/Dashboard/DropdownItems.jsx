@@ -1,6 +1,6 @@
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useDispatch } from 'react-redux';
-import { copyFile } from '../../Redux/actionCreators/filefoldersActions';
+import { deleteFile ,copyFileToBuffer} from '../../Redux/actionCreators/FileActions';
 
 function DropdownItems({file}) {
   const dispatch = useDispatch();
@@ -11,10 +11,9 @@ function DropdownItems({file}) {
         
       <Dropdown.Menu>
         <Dropdown.Item href="#/action-1">Rename</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Move</Dropdown.Item>
-        <Dropdown.Item onClick={()=>{dispatch(copyFile(file))}} >Copy</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Cut</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Remove</Dropdown.Item>
+        <Dropdown.Item onClick={()=>{dispatch(copyFileToBuffer(file))}} >Copy</Dropdown.Item>
+        <Dropdown.Item onClick={()=>{dispatch(copyFileToBuffer(file))}} >Cut</Dropdown.Item>
+        <Dropdown.Item onClick={()=>{dispatch(deleteFile(file))}}>Delete</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

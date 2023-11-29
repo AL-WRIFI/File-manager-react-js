@@ -3,7 +3,7 @@ import { faFolder, faFileAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { changeFolder } from "../../Redux/actionCreators/filefoldersActions";
+import { changeFolder } from "../../Redux/actionCreators/FolderActions";
 import DropdownItems from "./DropdownItems";
 // import './fileItem.css';
 function ShowItems({title , items ,type}){
