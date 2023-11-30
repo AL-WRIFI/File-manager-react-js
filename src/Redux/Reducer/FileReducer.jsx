@@ -6,7 +6,7 @@ const initialState = {
 }
 
 
-const FileFolderReducer = ( state=initialState,action) =>{
+const FileReducer = ( state=initialState,action) =>{
     switch(action.type){
         case types.SET_LOADING:
         return{
@@ -31,11 +31,21 @@ const FileFolderReducer = ( state=initialState,action) =>{
             userFiles: updateFiles,
         };
         
-       case types.COPY_FILES_TOBUFFER:
+        case types.COPY_FILES_TOBUFFER:
         return{
             ...state,
             filesBuffer:action.payload,
         };
+        case types.MOVE_FILE:
+            const movedfile = state.userFiles.find( (file) =>file.docId === action.payload.docId);
+            movedfile.data = action.payload.data,
+            console.log(movedfile);
+            return{
+                ...state,
+                userFiles: state.userFiles.map((file) =>
+                file.docId === action.payload.docId ? movedfile : file
+                ),
+            };
       
         case types.SET_FILE_DATA:
             const { fileId, data } = action.payload;
@@ -53,4 +63,4 @@ const FileFolderReducer = ( state=initialState,action) =>{
     }
 };
 
-export default FileFolderReducer;
+export default FileReducer;

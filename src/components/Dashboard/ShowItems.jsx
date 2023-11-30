@@ -6,16 +6,17 @@ import { useDispatch } from "react-redux";
 import { changeFolder } from "../../Redux/actionCreators/FolderActions";
 import DropdownItems from "./DropdownItems";
 // import './fileItem.css';
-function ShowItems({title , items ,type}){
+function ShowItems({title , items}){
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const handleDoubleClick= (itemId)=>{
-     if(type === "folder"){
-        dispatch(changeFolder(itemId));
-        navigate(`/dashboard/folder/${itemId}`);
+    
+    const handleDoubleClick= (item)=>{
+     if(item.data.type === "folder"){
+        dispatch(changeFolder(item.docId));
+        navigate(`/dashboard/folder/${item.docId}`);
      }else{
-        navigate(`/dashboard/file/${itemId}`);
+        navigate(`/dashboard/file/${item.docId}`);
      }
     }
 
@@ -23,27 +24,29 @@ function ShowItems({title , items ,type}){
         <Fragment>
             <h5>{title}</h5>
                    
-                <div className="row mt-3">
+                <div className="row mt-4 my-5">
                     
 
                     {items.map((el,idx)=>{
                       return(
-                        <div key={idx*55} className="col-12 col-lg-3">
+                        <div key={idx*55} className="col-12 col-lg-3 my-1">
                             <div className="card shadow-none border radius-15">
-                                <DropdownItems file={el} />
-                                <div className="card-body" onDoubleClick={()=>handleDoubleClick(el.docId)} >
+                                <div style={{ position: 'absolute', top: 0, right: 5 }}>
+                                <DropdownItems item={el} />
+                                </div>
+                                <div className="card-body" onDoubleClick={()=>handleDoubleClick(el)} >
                                     <div className="d-flex align-items-center">
                                         {el.data.extent === "png" ? (
                                         <div className="font-30 text-primary">
-                                            <img src={el.data.thumbnailUrl}  />
+                                            <img src={el.data.thumbnailUrl}   />
                                         </div>)
                                         :(
-                                        <div className="font-30 text-primary"><i className={type === "folder"? "bx bxs-folder" : "lni lni-empty-file"}></i>
+                                        <div className="font-30 text-primary"><i className={el.data.type === "folder"? "bx bxs-folder" : "lni lni-empty-file"} style={{ fontSize: '30px' }}></i>
                                         </div>
                                         )}
                                     </div>
                                     <h6 className="mb-0 text-primary">{el.data.name}</h6>
-                                    {type === "folder"? <small>143 files</small> : ""}
+                                    {el.data.type === "folder"? <small>143 files</small> : ""}
                                 </div>
                             </div>
                         </div>
@@ -53,7 +56,6 @@ function ShowItems({title , items ,type}){
                     </div>
         </Fragment>
     )
-        
     
 }
 

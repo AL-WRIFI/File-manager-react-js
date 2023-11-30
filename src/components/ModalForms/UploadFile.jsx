@@ -25,10 +25,10 @@ const UploadFile = () => {
     shallowEqual
   );
 
-  const checkFileAlreadyExists = (name) => {
+  const checkAlreadyExists = (name) => {
     return userFiles.some(
-      (file) =>
-        file.data.parent === currentFolder && file.data.name === name
+      (items) =>
+        items.data.parent === currentFolder && items.data.name === name
     );
   };
 
@@ -43,7 +43,7 @@ const UploadFile = () => {
     const modifiedType = file.type.includes("image/")? `image/${file.type.split("/").pop()}`
       : `file/${file.type.split("/").pop()}`;
 
-    if (checkFileAlreadyExists(file.name)) {
+    if (checkAlreadyExists(file.name)) {
       toast.error("File already exists");
       return;
     }
@@ -88,38 +88,32 @@ const UploadFile = () => {
       <Modal show={showModal} onHide={toggleModal}>
         <Modal.Header>
           <Modal.Title>Upload File</Modal.Title>
-          <Button
-            variant="white"
-            style={{ cursor: "pointer" }}
-            onClick={toggleModal}
-          >
-            <FontAwesomeIcon icon={faTimes} />
-          </Button>
-        </Modal.Header>
+            <Button variant="white" style={{ cursor: "pointer" }} onClick={toggleModal}>
+              <FontAwesomeIcon icon={faTimes} />
+            </Button>
+         </Modal.Header>
+
         <Modal.Body>
           <Form onSubmit={handleUploadFileSubmit}>
+            
             <Form.Group controlId="formBasicFolderName" className="my-2">
-              <Form.Control
-                type="file"
-                placeholder="Enter folder name..."
-                onChange={(e) => setFile(e.target.files[0])}
-              />
+              <Form.Control type="file"placeholder="Enter folder name..."
+                 onChange={(e) => setFile(e.target.files[0])} />
             </Form.Group>
+
             <Form.Group controlId="formBasicFolderSubmit" className="mt-5">
               <Button type="submit" className="form-control" variant="primary">
                 Upload File
               </Button>
             </Form.Group>
+
           </Form>
         </Modal.Body>
       </Modal>
-      <Button
-        onClick={toggleModal}
-        variant="outline-dark"
-        className="border-1 d-flex align-items-center justify-content-between rounded-2"
-      >
-        <FontAwesomeIcon icon={faFileUpload} />
-        &nbsp; Upload File
+
+      <Button onClick={toggleModal} variant="outline-dark" className="border-1 d-flex align-items-center justify-content-between rounded-2">
+         <FontAwesomeIcon icon={faFileUpload} />
+          &nbsp; Upload File
       </Button>
     </>
   );

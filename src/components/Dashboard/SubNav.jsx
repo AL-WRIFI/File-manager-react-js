@@ -27,7 +27,8 @@ const SubNav = () => {
 
 
   return (
-    <Col md={12} className={"d-flex align-items-center px-5 pt-3 justify-content-between"}>
+    
+    <Col md={12} className={"d-flex align-items-end px-5 pt-0 justify-content-between"}>
        <>
        <nav className="ms-5" aria-label="breadcrumb">
           <ol className="breadcrumb d-flex align-items-center" >
@@ -50,10 +51,10 @@ const SubNav = () => {
                 { currentFolderData?.data.name}
                 </li>
               </Fragment>
-            ):(<li className="breadcrumb-item">Root</li> )}
+            ):("")}
           </ol>
         </nav>
-          <div className="ml-auto col-md-5 d-flex justify-content-end">
+          <div className="ml-auto col-md-5 d-flex justify-content-center p-4" >
             <UploadFile  />
             &nbsp;
             <CreateFile  />

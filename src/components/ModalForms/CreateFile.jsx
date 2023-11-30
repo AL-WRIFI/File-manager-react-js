@@ -1,9 +1,8 @@
 import { faFileAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,Fragment } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-// import { toast } from "react-toastify";
 import { createFile } from "../../Redux/actionCreators/FileActions";
 import { toast } from "react-toastify";
 
@@ -25,66 +24,66 @@ const CreateFile = () => {
 
   }),shallowEqual);
 
-   const checkFileAlreadyExists =(name ,extention) =>{
+   const checkAlreadyExists =(name ,extention) =>{
     !extention ? name = name +".txt":'';
-    const fileExists = userFiles
-      .filter((file)=> file.data.parent === currentFolder)
-      .find((file)=> file.data.name === name);
-    if(fileExists){
-       return true; 
-    }else{ 
-      return false;
-    }
+    return userFiles.some(
+      (items) =>
+        items.data.parent === currentFolder && items.data.name === name
+    );
   }
 
   const handleFileSubmit = (e) => {
    e.preventDefault();
-   if(fileName){
-    if(fileName.length > 3){
-      let extention = false;
-      if(fileName.split(".").length >1){
-        extention = true;
-      }
-        if(!checkFileAlreadyExists(fileName,extention)){
-            const data = {
-                createdAt: new Date(),
-                createdBy: user.displayName,
-                lastAccessed: null,
-                type: "File",
-                name: extention ? fileName : `${fileName}.txt`,
-                path: currentFolder === "root" ? [] : [...currentFolderData.data.path,currentFolder],
-                parent: currentFolder,
-                updatedAt: new Date(),
-                userId: user.uid,
-                extent: extention ? fileName.split(".").pop() : "txt",
-                data: "",
-                url: "",
-                thumbnailUrl:"",
-            }
-            console.log(data);
-            dispatch(createFile(data ,setSuccess));
-            toggle();
-        }else{
-          toast.error("File already Exists");
-        }
-    }else{
-      toast.error("File name must be at least 3 Cher");
-    }
-   }else{
-    toast.error("File Name cannot by empty");
+
+   let extention = false;
+   if(fileName.split(".").length >1){
+     extention = true;
    }
+   
+   if (!fileName) {
+    toast.error("File Name cannot by empty");
+    return;
+  }
+  
+  if (checkAlreadyExists(fileName,extention)) {
+    toast.error("Folder already exists");
+    return;
+  }
+
+  const data = {
+    createdAt: new Date(),
+    createdBy: user.displayName,
+    lastAccessed: null,
+    type: "file",
+    name: extention ? fileName : `${fileName}.txt`,
+    path: currentFolder === "root" ? [] : [...currentFolderData.data.path,currentFolder],
+    parent: currentFolder,
+    updatedAt: new Date(),
+    userId: user.uid,
+    extent: extention ? fileName.split(".").pop() : "txt",
+    data: "",
+    url: "",
+  }
+
+  try {
+    dispatch(createFile(data,setSuccess));
+  } catch (error) {
+    console.error("Error Createing file:", error);
+    toast.error("Error Createing file");
+  }
+   
   };
 
   useEffect(()=>{
     if(success){
-      setFileName("");
+      //setFileName("");
       setShowModal(false);
       setSuccess(false);
     }
   },[success])
   
   return (
-    <>
+    <Fragment>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header>
           <Modal.Title>Create File</Modal.Title>
@@ -98,31 +97,26 @@ const CreateFile = () => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleFileSubmit}>
+
             <Form.Group controlId="formBasicFolderName" className="my-2">
-              <Form.Control
-                type="text"
-                placeholder="File Name e,g txt..."
-                value={fileName}
-                onChange={(e) => setFileName(e.target.value)}
-              />
+              <Form.Control type="text" placeholder="File Name e,g txt..."
+                value={fileName}onChange={(e) => setFileName(e.target.value)}/>
             </Form.Group>
+
             <Form.Group controlId="formBasicFolderSubmit" className="mt-5">
               <Button type="submit" className="form-control" variant="primary">
                 Add File
               </Button>
             </Form.Group>
+
           </Form>
         </Modal.Body>
       </Modal>
-      <Button
-        onClick={() => toggle()}
-        variant="outline-dark"
-        className="border-1 d-flex align-items-center justify-content-between rounded-2"
-      >
+      <Button onClick={() => toggle()} variant="outline-dark"className="border-1 d-flex align-items-center justify-content-between rounded-2" >
         <FontAwesomeIcon icon={faFileAlt} />
              &nbsp; Create File
       </Button>
-    </>
+    </Fragment>
   );
 };
 

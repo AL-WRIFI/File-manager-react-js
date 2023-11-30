@@ -29,40 +29,45 @@ const FolderComponent=()=>{
 
     }),shallowEqual)
 
+    const checkAlreadyExists = () =>{
 
-    
-
-
-    const checkNames = () =>{
+      let newName = filesBuffer.item.data.name;
+      let counter = 1;
+      const dotIndex = newName.lastIndexOf('.');
+      const baseName = dotIndex !== -1 ? newName.slice(0, dotIndex) : newName;
+      const extension = dotIndex !== -1 ? newName.slice(dotIndex) : '';
       
-       let newName = filesBuffer.file.data.name;
-       let counter = 1;
-       const dotIndex = newName.lastIndexOf('.');
-       const baseName = dotIndex !== -1 ? newName.slice(0, dotIndex) : newName;
-       const extension = dotIndex !== -1 ? newName.slice(dotIndex) : '';
+      while (childFiles.find(file => file.data.name === newName)) {
+          newName = `${baseName}(${counter})${extension}`;
+          counter++;
+      }
+     
+     return newName; 
+   }
 
-       while (childFiles.find(file => file.data.name === newName)) {
-           newName = `${baseName}(${counter})${extension}`;
-           counter++;
-         }
-
-        if (newName) { 
-          const data ={
-                ...filesBuffer.file.data,
-               name : newName,
+    const pasetAction = () =>{
+      
+          const name = checkAlreadyExists();
+          const docId = filesBuffer.item.docId;
+          const data = {
+                ...filesBuffer.item.data,
+               name : name,
                path : [...currentFolderData.data.path,currentFolderData.docId],
                parent : currentFolderData.docId,
             }
-            
-          dispatch(cutFile(data));
-         }
+          
+          
+
+        filesBuffer.action === "cut" ?
+        dispatch(cutFile(docId,data)):
+        dispatch(pasteFile(data));              
     }  
         
     return(
         <Fragment>     
           {filesBuffer.length !=0 &&(
-            <div type="button" onClick={checkNames} className="d-flex align-items-center justify-content-end">
-              Paste &nbsp;
+            <div type="button" onClick={pasetAction} className="d-flex align-items-center justify-content-end">
+               Paste &nbsp;
               <FontAwesomeIcon icon={faFileAlt} />
             </div>)
           }

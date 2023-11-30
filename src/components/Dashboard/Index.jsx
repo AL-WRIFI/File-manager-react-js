@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import Recentfile from "../../RecentFiles";
 import SidBar from "../../SidBar";
 import { Outlet } from "react-router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRightLong, faFileAlt } from "@fortawesome/free-solid-svg-icons";
 
 
 function Index(){
@@ -25,7 +27,7 @@ function Index(){
                         <div className="card-body">
                             <div className="fm-search">
                                 <div className="mb-0">
-                                    <div className="input-group input-group-lg">	<span className="input-group-text bg-transparent"><i className="fa fa-search"></i></span>
+                                    <div className="input-group input-group-lg"><span className="input-group-text bg-transparent"><i className="fa fa-search"></i></span>
                                         <input type="text" className="form-control" placeholder="Search the files" />
                                     </div>
                                 </div>
@@ -33,13 +35,19 @@ function Index(){
                             <div className="row mt-3">
                             
                             </div>
+                            
+                                {/* <div type="button" className="d-flex align-items-center justify-content-end" style={{ position: 'absolute', right: 25 }}>
+                                Paste &nbsp;
+                                <FontAwesomeIcon icon={faArrowRightLong} />
+                                </div> */}
+                            
                             {
                             isLoading ? (
                                 <h1 className="display-1 my-5 text-center">Loading...</h1>
                             ) :  currentFolder === "root" ? ( 
                                 <>
-                                <ShowItems title="folder" type="folder" items={userFolders}/>
-                                <ShowItems title="file" type="file" items={userFiles}/>
+                                <ShowItems title="folder"  items={userFolders}/>
+                                <ShowItems title="file" items={userFiles}/>
                                 </>
                             ) : (
                                 <Outlet/>

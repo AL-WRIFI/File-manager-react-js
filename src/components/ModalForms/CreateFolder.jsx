@@ -12,23 +12,22 @@ const CreateFolder = () => {
   const [folderName, setFolderName] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const { userFolders , user ,currentFolder ,currentFolderData} = useSelector((state)=>({
-    userFolders: state.Folders.userFolders,
-    user : state.auth.user,
-    currentFolder : state.Folders.currentFolder,
-    currentFolderData : state.Folders.userFolders.find((folder)=> folder.docId === state.Folders.currentFolder),
+  const { userFolders , user ,currentFolder ,currentFolderData} = useSelector(
+    (state)=>({
+      userFolders: state.Folders.userFolders,
+      user : state.auth.user,
+      currentFolder : state.Folders.currentFolder,
+      currentFolderData : state.Folders.userFolders.find(
+       (folder)=> folder.docId === state.Folders.currentFolder),
   }),shallowEqual);
 
-  const checkFolderAlreadyExists =(name) =>{
-    const folderExists = userFolders
-      .filter((folder)=> folder.data.parent === currentFolder)
-      .find((folder)=> folder.data.name === name);
-    if(folderExists){
-       return true; 
-    }else{ 
-      return false;
-    }
-  }
+ 
+  const checkAlreadyExists = (name) => {
+    return userFolders.some(
+      (items) =>
+        items.data.parent === currentFolder && items.data.name === name
+    );
+  };
 
   const toggle = () => {
     setShowModal(!showModal);
@@ -37,33 +36,39 @@ const CreateFolder = () => {
 
 
   const handleFolderSubmit = (e) => {
-   e.preventDefault();
-   if(folderName){
-    if(folderName.length > 3){
-        if(!checkFolderAlreadyExists(folderName)){
-            const data = {
-                createdAt: new Date(),
-                createdBy: user.displayName,
-                lastAccessed: null,
-                type: "Folder", 
-                name: folderName,
-                path: currentFolder === "root" ? [] : [...currentFolderData.data.path,currentFolder],
-                parent: currentFolder,
-                updatedAt: new Date(),
-                userId: user.uid,
-            }
-            dispatch(createFolder(data,setSuccess));
-            toggle();
-        }else{
-          toast.error("Folder already Exists");
-        }
-    }else{
-      toast.error("Folder name must be at least 3 Cher");
+      e.preventDefault();
+
+      if (!folderName) {
+        toast.error("Folder Name cannot be empty");
+        return;
+      }
+
+      if (checkAlreadyExists(folderName)) {
+        toast.error("Folder already exists");
+        return;
+      }
+
+    const data = {
+      createdAt: new Date(),
+      createdBy: user.displayName,
+      lastAccessed: null,
+      type: "folder", 
+      name: folderName,
+      path: currentFolder === "root" ? [] : [...currentFolderData.data.path,currentFolder],
+      parent: currentFolder,
+      updatedAt: new Date(),
+      userId: user.uid,
     }
-   }else{
-    toast.error("Folder Name cannot by empty");
-   }
+    
+    try {
+      dispatch(createFolder(data,setSuccess));
+    } catch (error) {
+      console.error("Error Createing file:", error);
+      toast.error("Error Createing file");
+    }
   };
+
+   
 
   useEffect(()=>{
     if(success){

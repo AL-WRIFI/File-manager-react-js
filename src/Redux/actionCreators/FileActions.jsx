@@ -24,41 +24,47 @@ const setFileData = (payload) => ({
   type: types.SET_FILE_DATA,
   payload,
 });
-export const copyFileToBuffer = (payload) => ({
+export const copyItemToBuffer = (payload) => ({
   type: types.COPY_FILES_TOBUFFER,
+  payload,
+});
+
+const moveFile = (payload) => ({
+  type: types.MOVE_FILE,
   payload,
 });
 
 
 
+
 export const pasteFile=(data)=>(dispatch)=>{
-    
     fire.firestore().collection('files').add(data).then( async file =>{
       const fileData = await (await file.get()).data();
       const filerId = file.id; 
       dispatch(addFile({ data:fileData , docId:filerId }));
       toast.success("Coped File Successfully"+file.name);
     }).catch(()=>{
-      toast.error("Can Not Copy File ");
+      toast.error("Something went wrong!");
     });
 }
 
-export const cutFile = (data) => (dispatch)=>{
-  console.log(data);
-  // fire.firestore().collection("files").doc(docId).update(data)
-  // .then(() => {
-  //   toast.success("File moved successfully!");
-  // })
-  // .catch(() => {
-  //   toast.error("Something went wrong!");
-  // });
+export const cutFile = (docId,data) => (dispatch)=>{
+  fire.firestore().collection("files").doc(docId).update({
+    name: data.name,
+    path: data.path,
+    parent : data.parent    
+  }).then( async() => {
+    dispatch(moveFile({ docId , data }));
+    toast.success("File moved successfully!");
+  })
+  .catch(() => {
+    toast.error("Something went wrong!");
+  });
 }
 
 
 // FILES
-export const gitFile= (userId)=>(dispatch)=>{
-  console.log(userId);
-}
+
 export const createFile = (data ,setSuccess) =>(dispatch)=>{
   fire.firestore().collection('files').add(data).then( async file =>{
     const fileData = await (await file.get()).data();

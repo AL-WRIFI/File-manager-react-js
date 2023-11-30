@@ -72,10 +72,7 @@ const FileComponent = () => {
                 >
                   Go Back
                 </button>
-                <button
-                  className="btn btn-sm btn-primary"
-                  onClick={() => downloadFile()}
-                >
+                <button onClick={()=> downloadFile()} className="btn btn-sm btn-primary">
                   Download
                 </button>
               </div>
@@ -85,16 +82,11 @@ const FileComponent = () => {
               currentFile?.data?.extension.includes("jpg") ||
               currentFile?.data?.extension.includes("jpeg") ||
               currentFile?.data?.extension.includes("gif") ? (
-                <img
-                  src={currentFile?.data?.url}
-                  alt={currentFile?.data?.name}
-                  className="w-100 h-100 img-fluid"
-                />
+                <img src={currentFile?.data?.url} alt={currentFile?.data?.name} className="w-100 h-100 img-fluid" />
               ) : (
                 <div className="w-100 h-100 d-flex justify-content-center align-items-center">
                   <p className="text-center">
-                    File type not supported. Please download the file to view
-                    it.
+                    File type not supported. Please download the file to view it.
                   </p>
                 </div>
               )}

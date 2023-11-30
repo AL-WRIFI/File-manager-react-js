@@ -7,7 +7,7 @@ const initialState = {
 }
 
 
-const FileFolderReducer = ( state=initialState,action) =>{
+const FolderReducer = ( state=initialState,action) =>{
     switch(action.type){
        case types.CREATE_FOLDER:
         return{
@@ -29,10 +29,26 @@ const FileFolderReducer = ( state=initialState,action) =>{
         return{
             ...state,
             currentFolder: action.payload,
+        };
+        case types.REMOVE_FOLDER:
+        const updateFolder = state.userFolders.filter(
+            (folder)=> folder.docId !== action.payload);
+        return{
+            ...state,
+            userFolders: updateFolder,
         }; 
-
+        case types.MOVE_FOLDER:
+            const movedfolder = state.userFolders.find( (folder) =>folder.docId === action.payload.docId);
+            movedfolder.data = action.payload.data,
+            console.log(movedfolder);
+            return{
+                ...state,
+                userFolders: state.userFolders.map((folder) =>
+                folder.docId === action.payload.docId ? movedfolder : folder
+                ),
+            };
        default: return state;
     }
 };
 
-export default FileFolderReducer;
+export default FolderReducer;
