@@ -36,7 +36,7 @@ function ShowItems({title , items}){
                                 </div>
                                 <div className="card-body" onDoubleClick={()=>handleDoubleClick(el)} >
                                     <div className="d-flex align-items-center">
-                                        {el.data.extent === "png" ? (
+                                        {el.data.type.startsWith('image') ? (
                                         <div className="font-30 text-primary">
                                             <img src={el.data.thumbnailUrl}   />
                                         </div>)

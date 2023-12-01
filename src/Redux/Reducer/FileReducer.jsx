@@ -38,8 +38,7 @@ const FileReducer = ( state=initialState,action) =>{
         };
         case types.MOVE_FILE:
             const movedfile = state.userFiles.find( (file) =>file.docId === action.payload.docId);
-            movedfile.data = action.payload.data,
-            console.log(movedfile);
+            movedfile.data = action.payload.data;
             return{
                 ...state,
                 userFiles: state.userFiles.map((file) =>

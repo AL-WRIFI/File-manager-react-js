@@ -30,6 +30,11 @@ const FolderReducer = ( state=initialState,action) =>{
             ...state,
             currentFolder: action.payload,
         };
+        case types.COPY_FOLDERS_TOBUFFER:
+        return{
+            ...state,
+            filesBuffer:action.payload,
+        };
         case types.REMOVE_FOLDER:
         const updateFolder = state.userFolders.filter(
             (folder)=> folder.docId !== action.payload);
@@ -39,8 +44,7 @@ const FolderReducer = ( state=initialState,action) =>{
         }; 
         case types.MOVE_FOLDER:
             const movedfolder = state.userFolders.find( (folder) =>folder.docId === action.payload.docId);
-            movedfolder.data = action.payload.data,
-            console.log(movedfolder);
+            movedfolder.data = action.payload.data;
             return{
                 ...state,
                 userFolders: state.userFolders.map((folder) =>
