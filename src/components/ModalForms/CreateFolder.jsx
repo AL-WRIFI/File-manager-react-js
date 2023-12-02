@@ -56,6 +56,8 @@ const CreateFolder = () => {
       name: folderName,
       path: currentFolder === "root" ? [] : [...currentFolderData.data.path,currentFolder],
       parent: currentFolder,
+      subFolders:[],
+      subFiles:[],
       updatedAt: new Date(),
       userId: user.uid,
     }

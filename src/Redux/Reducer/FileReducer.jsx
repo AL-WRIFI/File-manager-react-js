@@ -23,6 +23,14 @@ const FileReducer = ( state=initialState,action) =>{
             ...state,
             userFiles: action.payload,
         };
+        case types.RENAME_FILE:
+            const renamedFile = state.userFiles.find( (file) => file.docId === action.payload.docId);
+            renamedFile.data.name = action.payload.name;
+            return{
+                ...state,
+                userFiles: state.userFiles.map((file) =>
+                file.docId === action.payload.docId ? renamedFile : file ),
+            };
         case types.REMOVE_FILE:
         const updateFiles = state.userFiles.filter(
             (file)=> file.docId !== action.payload);

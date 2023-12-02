@@ -36,18 +36,79 @@ const moveFolder = (payload) => ({
   type: types.MOVE_FOLDER,
   payload,
 });
+const renameFolder = (payload) => ({
+  type: types.RENAME_FOLDER,
+  payload,
+});
 
 // FOLDERS
 export const createFolder = (data ,setSuccess) =>(dispatch)=>{
   fire.firestore().collection('folders').add(data).then( async folder=>{
     const folderData = await (await folder.get()).data();
-    const folderId = folder.id; 
+    const folderId = folder.id;
+    folderData.parent !== "root" ? addToParentSubFolders(folder.id ,folderData.parent):"";
     dispatch(addFolder({ data:folderData , docId:folderId }));
     toast.success("Created Folder Successfully"+folder.name);
     setSuccess(true);
   }).catch((error)=>{
     console.log(error)
   });
+};
+
+const addToParentSubFolders = async (folderId,parentId) =>{
+   try{
+    const folderRef = fire.firestore().collection("folders").doc(parentId);
+    const folderSnapshot = await folderRef.get();
+    const subfoldersArray = await folderSnapshot.get("subFolders") || [];
+
+    await folderRef.update({
+      subFolders : [...subfoldersArray , folderId],
+    })
+
+   }catch(error){
+    console.error(error);
+   }
+}
+const removeFromParentSubFolders = async (folderId,parentId) =>{
+  try{
+   const folderRef = fire.firestore().collection("folders").doc(parentId);
+   const folderSnapshot = await folderRef.get();
+   const subfoldersArray = await folderSnapshot.get("subFolders") || [];
+   const subFolders = subfoldersArray.filter((folder)=> folder !== folderId)
+
+   await folderRef.update({
+     subFolders : subFolders,
+   })
+
+  }catch(error){
+   console.error(error);
+  }
+}
+
+export const cutActionFolder = (folderId,data) => async (dispatch) =>{
+
+  try{
+    const folderRef = fire.firestore().collection("folders").doc(folderId);
+    const folderSnapshot = await folderRef.get();
+    const parentId = await folderSnapshot.get("parent");
+    console.log(parentId , folderId);
+      
+    await folderRef.update({
+      name: data.name,
+      path: data.path,
+      parent : data.parent 
+    }).then(async ()=>{
+      await removeFromParentSubFolders(folderId,parentId);
+      await data.parent !== "root" ? addToParentSubFolders(folderId ,data.parent):"";
+      await dispatch(moveFolder({ folderId , data }));
+      toast.success("Folder moved successfully!");
+    }).catch(() => {
+      toast.error("Something went wrong!");
+    });
+  
+  }catch(error){
+    toast.error(error);
+  }
 };
 
 export const gitFolders = (userId) => (dispatch)=>{
@@ -67,40 +128,48 @@ export const changeFolder =(folderId) => (dispatch)=>{
   dispatch(setChangeFolder(folderId));
 };
 
-export const pasteFolder=(data)=>(dispatch)=>{
-  fire.firestore().collection('folders').add(data).then( async folder =>{
+export const pasetActionFolder =  (docId,data) =>  async(dispatch)=>{
+  const DB = fire.firestore();
+  const sourceFolderId = docId;
+  const DestintionFolderId = data.parent;
+  
+  
+  const copySubFolder = (parentId,data) =>{
+    const newData = {
+      ...data,
+      parent : parentId,
+    }
+
+
+  }
+
+  const newFolder = DB.collection('folders').add(data);
+  newFolder.then(async folder=>{
     const folderData = await (await folder.get()).data();
-    const folderrId = folder.id; 
-    dispatch(addFolder({ data:folderData , docId:folderrId }));
-    toast.success("Coped Folder Successfully"+folder.name);
-  }).catch(()=>{
-    toast.error("Something went wrong!");
-  });
+    const folderId = folder.id;
+    addToParentSubFolders(folder.id ,folderData.parent);
+    dispatch(addFolder({ data:folderData , docId:folderId }));
+  })
+
+
+  // await console.log((await (await newFolder).get()).data());
+   
+
 }
 
-export const cutFolder= (docId,data) => (dispatch)=>{
-fire.firestore().collection("folders").doc(docId).update({
-  name: data.name,
-  path: data.path,
-  parent : data.parent    
-}).then( async() => {
-  dispatch(moveFolder({ docId , data }));
-  toast.success("Folder moved successfully!");
-})
-.catch(() => {
-  toast.error("Something went wrong!");
-});
-}
+
+
+
 
 
 export const deleteFolderAndSubfolders = (folder) => async (dispatch) => {
-  const db = fire.firestore();
+  const DB = fire.firestore();
   const folderId = folder.docId;
   const deleteFolder = async (folderRef, batch) => {
     try {
       const snapshot = await folderRef.get();
       if (snapshot.exists) {
-        const files = await db.collection('files').where('parent', '==', folderRef.id).get();
+        const files = await DB.collection('files').where('parent', '==', folderRef.id).get();
         
         files.forEach(async (file) => {
           const isImage = file.data().type.startsWith('image');
@@ -109,13 +178,13 @@ export const deleteFolderAndSubfolders = (folder) => async (dispatch) => {
             url && (await fire.storage().refFromURL(url).delete());
             thumbnailUrl && (await fire.storage().refFromURL(thumbnailUrl).delete());
           }
-          await db.collection('files').doc(file.id).delete();
+          await DB.collection('files').doc(file.id).delete();
         });
 
-        const subfolders = await db.collection('folders').where('parent', '==', folderRef.id).get();
+        const subfolders = await DB.collection('folders').where('parent', '==', folderRef.id).get();
         subfolders.forEach(async (subfolder) => {
-          const subfolderRef = db.collection('folders').doc(subfolder.id);
-          const subfolderBatch = db.batch();
+          const subfolderRef = DB.collection('folders').doc(subfolder.id);
+          const subfolderBatch = DB.batch();
           await deleteFolder(subfolderRef, subfolderBatch);
           await subfolderBatch.commit();
           await dispatch(removeFolder(subfolder.id));
@@ -129,8 +198,8 @@ export const deleteFolderAndSubfolders = (folder) => async (dispatch) => {
     }
   };
 
-  const folderRef = db.collection('folders').doc(folderId);
-  const mainBatch = db.batch(); 
+  const folderRef = DB.collection('folders').doc(folderId);
+  const mainBatch = DB.batch(); 
 
   try {
     await deleteFolder(folderRef, mainBatch);
@@ -143,15 +212,18 @@ export const deleteFolderAndSubfolders = (folder) => async (dispatch) => {
 };
 
 
+
+
+
 // export const deleteFolderAndSubfolders =  (folderId) => async (dispatch) => {
-//   const db = fire.firestore();
+//   const DB = fire.firestore();
 
 //   const deleteFolder = async (folderRef, batch) => {
 //     try {
 //       const snapshot = await folderRef.get();
 //       if (snapshot.exists) {
 
-//         const files = await db.collection('files').where('parent', '==', folderRef.id).get();
+//         const files = await DB.collection('files').where('parent', '==', folderRef.id).get();
 //         files.forEach( async (file) => {
 //           const isImage = file.data().type.startsWith('image');
 //           if(isImage){
@@ -161,14 +233,14 @@ export const deleteFolderAndSubfolders = (folder) => async (dispatch) => {
 //             thumbnailUrl && await fire.storage().refFromURL(thumbnailUrl).delete();
             
 //           }
-//           const fileRef = db.collection('files').doc(file.id);
+//           const fileRef = DB.collection('files').doc(file.id);
 //           batch.delete(fileRef);
 //         });
 
-//         const subfolders = await db.collection('folders').where('parent', '==', folderRef.id).get();
+//         const subfolders = await DB.collection('folders').where('parent', '==', folderRef.id).get();
 //         subfolders.forEach(async (subfolder) => {
-//           const subfolderRef = db.collection('folders').doc(subfolder.id);
-//           const subfolderBatch = db.batch();
+//           const subfolderRef = DB.collection('folders').doc(subfolder.id);
+//           const subfolderBatch = DB.batch();
 //           await deleteFolder(subfolderRef, subfolderBatch);
 //           await subfolderBatch.commit();
 //           await dispatch(removeFolder(subfolder.id))
@@ -182,8 +254,8 @@ export const deleteFolderAndSubfolders = (folder) => async (dispatch) => {
 //     }
 //   };
 
-//   const folderRef = db.collection('folders').doc(folderId);
-//   const mainBatch = db.batch(); 
+//   const folderRef = DB.collection('folders').doc(folderId);
+//   const mainBatch = DB.batch(); 
 
 //   try {
 //     await deleteFolder(folderRef, mainBatch);

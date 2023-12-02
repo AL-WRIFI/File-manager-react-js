@@ -34,7 +34,10 @@ const moveFile = (payload) => ({
   payload,
 });
 
-
+const renameFolder = (payload) => ({
+  type: types.RENAME_FILE,
+  payload,
+});
 
 
 export const pasteFile=(data)=>(dispatch)=>{
@@ -69,6 +72,7 @@ export const createFile = (data ,setSuccess) =>(dispatch)=>{
   fire.firestore().collection('files').add(data).then( async file =>{
     const fileData = await (await file.get()).data();
     const filerId = file.id; 
+    addToParentSubFiles(file.id ,fileData.parent );
     dispatch(addFile({ data:fileData , docId:filerId }));
     setSuccess(true);
     toast.success("Created File Successfully"+file.name);
@@ -76,6 +80,21 @@ export const createFile = (data ,setSuccess) =>(dispatch)=>{
     setSuccess(false);
   });
 };
+
+const addToParentSubFiles = async (fileId,parentId) =>{
+  try{
+   const fileRef = fire.firestore().collection("folders").doc(parentId);
+   const fileSnapshot = await fileRef.get();
+   const subFilesArray = await fileSnapshot.get("subFiles") || [];
+
+   await fileRef.update({
+    subFiles: [...subFilesArray , fileId],
+   })
+
+  }catch(error){
+   console.error(" --- " ,error);
+  }
+}
 
 export const gitFiles = (userId) => (dispatch)=>{
   // dispatch(setLoading(true))

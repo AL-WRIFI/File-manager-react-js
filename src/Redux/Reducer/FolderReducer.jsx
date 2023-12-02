@@ -42,13 +42,21 @@ const FolderReducer = ( state=initialState,action) =>{
             ...state,
             userFolders: updateFolder,
         }; 
-        case types.MOVE_FOLDER:
-            const movedfolder = state.userFolders.find( (folder) =>folder.docId === action.payload.docId);
-            movedfolder.data = action.payload.data;
+        case types.RENAME_FOLDER:
+            const renamedFolder = state.userFolders.find( (folder) =>folder.docId === action.payload.docId);
+            renamedFolder.data.name = action.payload.name;
             return{
                 ...state,
                 userFolders: state.userFolders.map((folder) =>
-                folder.docId === action.payload.docId ? movedfolder : folder
+                folder.docId === action.payload.docId ? renamedFolder : folder ),
+            };
+        case types.MOVE_FOLDER:
+            const movedFolder = state.userFolders.find( (folder) =>folder.docId === action.payload.docId);
+            movedFolder.data = action.payload.data;
+            return{
+                ...state,
+                userFolders: state.userFolders.map((folder) =>
+                folder.docId === action.payload.docId ? movedFolder : folder
                 ),
             };
        default: return state;

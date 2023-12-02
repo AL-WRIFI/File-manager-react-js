@@ -5,6 +5,7 @@ import ShowItems from "../ShowItems";
 import { faFileAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { cutFile, pasteFile } from "../../../Redux/actionCreators/FileActions";
+import { cutActionFolder, pasetActionFolder } from "../../../Redux/actionCreators/FolderActions";
 import { toast } from "react-toastify";
 
 
@@ -29,25 +30,35 @@ const FolderComponent=()=>{
 
     }),shallowEqual)
 
-    const checkAlreadyExists = () =>{
-
-      let newName = filesBuffer.item.data.name;
+    const checkAlreadyExists = (name) =>{
+     
+      let newName = name;
       let counter = 1;
       const dotIndex = newName.lastIndexOf('.');
       const baseName = dotIndex !== -1 ? newName.slice(0, dotIndex) : newName;
       const extension = dotIndex !== -1 ? newName.slice(dotIndex) : '';
+      const nameList = filesBuffer.item.data.type == "folder" ? childFolders : childFiles;
       
-      while (childFiles.find(file => file.data.name === newName)) {
+      while (nameList.find(file => file.data.name === newName)) {
           newName = `${baseName}(${counter})${extension}`;
           counter++;
       }
      
      return newName; 
    }
+    
+    const getTypeActions = (type) =>{
 
+      const actions = type === "folder" ? 
+      {cut: cutActionFolder , paste: pasetActionFolder}: 
+      {cut: cutFile , paste: pasteFile};
+
+      return actions;
+    }
+    
     const pasetAction = () =>{
       
-          const name = checkAlreadyExists();
+          const name = checkAlreadyExists(filesBuffer.item.data.name);
           const docId = filesBuffer.item.docId;
           const data = {
                 ...filesBuffer.item.data,
@@ -55,12 +66,11 @@ const FolderComponent=()=>{
                path : [...currentFolderData.data.path,currentFolderData.docId],
                parent : currentFolderData.docId,
             }
-          
-          
-
+      
+        const actions = getTypeActions(filesBuffer.item.data.type);
         filesBuffer.action === "cut" ?
-        dispatch(cutFile(docId,data)):
-        dispatch(pasteFile(data));              
+        dispatch(actions.cut(docId,data)):
+        dispatch(actions.paste(docId,data));              
     }  
         
     return(
