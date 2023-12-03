@@ -6,7 +6,7 @@ import axios from 'axios';
 
 
 // FILES
-const addFile= (payload)=>({
+export const addFile= (payload)=>({
   type: types.CREATE_FILES,
   payload,
 })
@@ -40,7 +40,57 @@ const renameFolder = (payload) => ({
 });
 
 
-export const pasteFile=(data)=>(dispatch)=>{
+export const pasteFile=(docId,data)=> async (dispatch)=>{
+    // const file = await fire.firestore().collection('files').doc(data).get();
+
+    // const isImage = file.data().type && file.data().type.startsWith('image');
+    // const storage = fire.storage();
+
+    // if(isImage){
+    // const sourcePath = `files/${file.data().userId}/${file.data().name}`;
+    // const destinationPath = `filesCopy/${file.data().userId}/${file.data().name}`;
+    // const sourceImageRef = storage.ref().child(sourcePath);
+    // const sourceImageUrl = await sourceImageRef.getDownloadURL();
+    // const imageBlob = await fetch(sourceImageUrl).then(response => response.blob());
+
+    // console.log(imageBlob);
+    // // Upload the image to a new path
+    // const destinationImageRef = storage.ref().child(destinationPath);
+    // await destinationImageRef.put(imageBlob);
+    //   // const sourceImageUrl = file.data().url; 
+    //   // const imageBlob = await fetch(sourceImageUrl).then(response => response.blob());
+    //   // console.log(imageBlob);
+      
+    //   // const storageRef = fire.storage().ref();
+    //   // const destinationImagePath = `files/${file.data().userId}/${file.data().name}`;
+    //   // const destinationImageRef = storageRef.child(destinationImagePath);
+    //   // await destinationImageRef.put(imageBlob);
+    //   const dataWithImage = {
+    //     ...file.data(),
+    //     url : destinationPath,
+    //   };
+
+
+    //   fire.firestore().collection('files').add(dataWithImage).then( async file =>{
+    //     const fileData = await (await file.get()).data();
+    //     const filerId = file.id; 
+    //     dispatch(addFile({ data:fileData , docId:filerId }));
+    //     toast.success("Coped File Successfully"+file.name);
+    //   }).catch(()=>{
+    //     toast.error("Something went wrong!");
+    //   });
+    // }else{
+
+    //   fire.firestore().collection('files').add(data).then( async file =>{
+    //     const fileData = await (await file.get()).data();
+    //     const filerId = file.id; 
+    //     dispatch(addFile({ data:fileData , docId:filerId }));
+    //     toast.success("Coped File Successfully"+file.name);
+    //   }).catch(()=>{
+    //     toast.error("Something went wrong!");
+    //   });
+    // }
+
     fire.firestore().collection('files').add(data).then( async file =>{
       const fileData = await (await file.get()).data();
       const filerId = file.id; 
@@ -49,6 +99,7 @@ export const pasteFile=(data)=>(dispatch)=>{
     }).catch(()=>{
       toast.error("Something went wrong!");
     });
+    
 }
 
 export const cutFile = (docId,data) => (dispatch)=>{

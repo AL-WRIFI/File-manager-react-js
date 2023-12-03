@@ -9,16 +9,19 @@ import { useDispatch } from 'react-redux';
 import FolderComponent from "./components/Dashboard/FolderComponent/FolderComponent";
 import FileComponent from "./components/Dashboard/FileComponent/FileComponent";
 import Index from "./components/Dashboard/Index";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Fragment } from 'react';
-
+import Varx from './vsr';
 function App() {
   
   const dispatch= useDispatch();
   
-  useEffect(()=>{
+  const checkIsLoggedin =()=>{
     dispatch(checkIsLoggedIn());
+  }
+  useEffect(()=>{
+    checkIsLoggedin();
   },[])
 
   return (
@@ -26,7 +29,7 @@ function App() {
       <NavbarComponent />
       <ToastContainer/>
       <Routes>
-        
+        <Route  path="/var" element={<Varx/>} />
         <Route  path="/login" element={<Login/>} />
         <Route  path="/signup" element={<Register />}/>
         <Route  path="/dashboard" element={<Dashboard />}>

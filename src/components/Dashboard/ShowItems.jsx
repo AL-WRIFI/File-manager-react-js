@@ -25,8 +25,6 @@ function ShowItems({title , items}){
             <h5>{title}</h5>
                    
                 <div className="row mt-4 my-5">
-                    
-
                     {items.map((el,idx)=>{
                       return(
                         <div key={idx*55} className="col-12 col-lg-3 my-1">
@@ -41,7 +39,7 @@ function ShowItems({title , items}){
                                             <img src={el.data.thumbnailUrl}   />
                                         </div>)
                                         :(
-                                        <div className="font-30 text-primary"><i className={el.data.type === "folder"? "bx bxs-folder" : "lni lni-empty-file"} style={{ fontSize: '30px' }}></i>
+                                        <div className="font-30 text-primary"><i className={el.data.type === "folder"? "bx bxs-folder " : "lni lni-empty-file"} style={{ fontSize: '30px' }}></i>
                                         </div>
                                         )}
                                     </div>
