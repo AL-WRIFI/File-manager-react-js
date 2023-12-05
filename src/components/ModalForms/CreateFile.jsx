@@ -114,10 +114,10 @@ const CreateFile = () => {
           </Form>
         </Modal.Body>
       </Modal>
-      <a onClick={() => toggle()} className=" "  >
+      <div type="button" onClick={() => toggle()} className=" "  >
         <FontAwesomeIcon icon={faFileAlt} />
              &nbsp;&nbsp; File
-      </a>
+      </div>
     </Fragment>
   );
 };

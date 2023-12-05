@@ -113,11 +113,11 @@ const Rename = ({item}) => {
           </Form>
         </Modal.Body>
       </Modal>
-      <a onClick={() => toggle()} >
+      <div type="button" onClick={() => toggle()} >
         {/* <FontAwesomeIcon icon={faFileAlt} />
              &nbsp; Create File */}
              Rename
-      </a>
+      </div>
     </Fragment>
   );
 };

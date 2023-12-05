@@ -115,10 +115,10 @@ const CreateFolder = () => {
           </Form>
         </Modal.Body>
       </Modal>
-      <a  onClick={() => toggle()}  className="">
+      <div type="button" onClick={() => toggle()}  className="">
       <FontAwesomeIcon icon={faFolderPlus} />
           &nbsp; Folder 
-      </a>
+      </div>
       
     </>
   );

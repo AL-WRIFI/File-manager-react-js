@@ -112,10 +112,10 @@ const UploadFile = () => {
         </Modal.Body>
       </Modal>
 
-      <a onClick={toggleModal}  className="">
+      <div type="button" onClick={toggleModal}  className="">
          <FontAwesomeIcon icon={faFileUpload} />
           &nbsp; Upload 
-      </a>
+      </div>
     </>
   );
 };
