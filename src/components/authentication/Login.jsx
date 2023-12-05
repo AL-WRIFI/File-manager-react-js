@@ -1,11 +1,17 @@
-import React, { useState ,useEffect} from "react";
+import { useState ,useEffect} from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate} from "react-router-dom";
 import { signInUser } from "../../Redux/actionCreators/authActions";
-import { useDispatch } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 const Login = () => {
+
+  const { isAuthenticated  } = useSelector((state) =>({ 
+    isAuthenticated : state.auth.isAuthenticated ,
+   }),shallowEqual);
+
+    
 
     const [email ,setEmail] = useState('');
     const [password ,setPassword] = useState('');
@@ -23,6 +29,13 @@ const Login = () => {
       dispatch(signInUser(email,password, setSuccess));
     };
     
+    
+    
+    useEffect(()=>{
+      if(isAuthenticated){
+          navigate("/dashboard");
+      }
+     },[]);
     useEffect(()=>{
       if(success){
         navigate("/dashboard")
@@ -58,7 +71,7 @@ const Login = () => {
                 variant="primary"
                 type="submit"
                 className="form-control"
-                block
+                // block
               >
                 Login
               </Button>

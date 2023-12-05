@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileUpload, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { uploadFile } from "../../Redux/actionCreators/FileActions";
+import { uploadFile } from "../../Redux/actionCreators/FileActions/UploadFile";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const UploadFile = () => {
   const [showModal, setShowModal] = useState(false);
@@ -111,10 +112,10 @@ const UploadFile = () => {
         </Modal.Body>
       </Modal>
 
-      <Button onClick={toggleModal} variant="outline-dark" className="border-1 d-flex align-items-center justify-content-between rounded-2">
+      <a onClick={toggleModal}  className="">
          <FontAwesomeIcon icon={faFileUpload} />
-          &nbsp; Upload File
-      </Button>
+          &nbsp; Upload 
+      </a>
     </>
   );
 };

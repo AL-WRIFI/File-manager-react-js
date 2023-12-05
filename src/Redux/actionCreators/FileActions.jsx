@@ -10,17 +10,17 @@ export const addFile= (payload)=>({
   type: types.CREATE_FILES,
   payload,
 })
-const addFiles= (payload)=>({
+export const addFiles= (payload)=>({
   type: types.ADD_FILES,
   payload,
 })
 
-const removeFile = (fileId) => ({
+export const removeFile = (fileId) => ({
   type: types.REMOVE_FILE,
   payload: fileId,
 });
 
-const setFileData = (payload) => ({
+export const setFileData = (payload) => ({
   type: types.SET_FILE_DATA,
   payload,
 });
@@ -29,12 +29,12 @@ export const copyItemToBuffer = (payload) => ({
   payload,
 });
 
-const moveFile = (payload) => ({
+export const moveFile = (payload) => ({
   type: types.MOVE_FILE,
   payload,
 });
 
-const renameFolder = (payload) => ({
+export const renameFolder = (payload) => ({
   type: types.RENAME_FILE,
   payload,
 });
@@ -119,33 +119,33 @@ export const cutFile = (docId,data) => (dispatch)=>{
 
 // FILES
 
-export const createFile = (data ,setSuccess) =>(dispatch)=>{
-  fire.firestore().collection('files').add(data).then( async file =>{
-    const fileData = await (await file.get()).data();
-    const filerId = file.id; 
-    addToParentSubFiles(file.id ,fileData.parent );
-    dispatch(addFile({ data:fileData , docId:filerId }));
-    setSuccess(true);
-    toast.success("Created File Successfully"+file.name);
-  }).catch(()=>{
-    setSuccess(false);
-  });
-};
+// export const createFile = (data ,setSuccess) =>(dispatch)=>{
+//   fire.firestore().collection('files').add(data).then( async file =>{
+//     const fileData = await (await file.get()).data();
+//     const filerId = file.id; 
+//     addToParentSubFiles(file.id ,fileData.parent );
+//     dispatch(addFile({ data:fileData , docId:filerId }));
+//     setSuccess(true);
+//     toast.success("Created File Successfully"+file.name);
+//   }).catch(()=>{
+//     setSuccess(false);
+//   });
+// };
 
-const addToParentSubFiles = async (fileId,parentId) =>{
-  try{
-   const fileRef = fire.firestore().collection("folders").doc(parentId);
-   const fileSnapshot = await fileRef.get();
-   const subFilesArray = await fileSnapshot.get("subFiles") || [];
+// const addToParentSubFiles = async (fileId,parentId) =>{
+//   try{
+//    const fileRef = fire.firestore().collection("folders").doc(parentId);
+//    const fileSnapshot = await fileRef.get();
+//    const subFilesArray = await fileSnapshot.get("subFiles") || [];
 
-   await fileRef.update({
-    subFiles: [...subFilesArray , fileId],
-   })
+//    await fileRef.update({
+//     subFiles: [...subFilesArray , fileId],
+//    })
 
-  }catch(error){
-   console.error(" --- " ,error);
-  }
-}
+//   }catch(error){
+//    console.error(" --- " ,error);
+//   }
+// }
 
 export const gitFiles = (userId) => (dispatch)=>{
   // dispatch(setLoading(true))
@@ -160,22 +160,22 @@ export const gitFiles = (userId) => (dispatch)=>{
     });
 };
 
-export const deleteFile = (file) => async (dispatch) => {
-  try {
-    const { url, thumbnailUrl } = file.data;
+// export const deleteFile = (file) => async (dispatch) => {
+//   try {
+//     const { url, thumbnailUrl } = file.data;
    
-    url && await fire.storage().refFromURL(url).delete();
-    thumbnailUrl && await fire.storage().refFromURL(thumbnailUrl).delete();
+//     url && await fire.storage().refFromURL(url).delete();
+//     thumbnailUrl && await fire.storage().refFromURL(thumbnailUrl).delete();
 
-    await fire.firestore().collection('files').doc(file.docId).delete();
+//     await fire.firestore().collection('files').doc(file.docId).delete();
 
-    dispatch(removeFile(file.docId));
-    toast.success("File Deleted Successfully");
-  } catch (error) {
-    console.error("Error deleting file:", error);
-    toast.error("Failed to delete the file");
-  }
-};
+//     dispatch(removeFile(file.docId));
+//     toast.success("File Deleted Successfully");
+//   } catch (error) {
+//     console.error("Error deleting file:", error);
+//     toast.error("Failed to delete the file");
+//   }
+// };
 
 
 export const updateFileData = (fileId, data) => (dispatch) => {

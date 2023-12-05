@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useDispatch } from 'react-redux';
-import { deleteFile ,copyItemToBuffer} from '../../Redux/actionCreators/FileActions';
-import { deleteFolderAndSubfolders } from '../../Redux/actionCreators/FolderActions';
+import { copyItemToBuffer} from '../../Redux/actionCreators/FileActions';
+import { deleteFile } from '../../Redux/actionCreators/FileActions/DeleteFile';
+import { deleteFolderAndSubfolders } from '../../Redux/actionCreators/FolderActions/DeleteFolder';
 // import Rename from '../ModalForms/Rename';
 function DropdownItems({item}) {
   const dispatch = useDispatch();

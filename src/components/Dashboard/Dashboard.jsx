@@ -1,15 +1,15 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import { useSelector ,shallowEqual, useDispatch} from "react-redux";
 import { Outlet, useLocation, useNavigate} from "react-router-dom";
 import SubNav from "./SubNav";
 
-import { gitFolders } from "../../Redux/actionCreators/FolderActions";
-import { gitFiles } from "../../Redux/actionCreators/FileActions";
+import { gitFolders } from "../../Redux/actionCreators/FolderActions/GetFolders";
+import { gitFiles } from "../../Redux/actionCreators/FileActions/GetFiles";
 
 const Dashboard =()=>{
 
-const [showSubNav,setShowSubNav] = useState(true);
-const  location  = useLocation();
+// const [showSubNav,setShowSubNav] = useState(true);
+// const  location  = useLocation();
 const navigate = useNavigate();
 const dispatch = useDispatch();
 
@@ -23,7 +23,7 @@ useEffect(()=>{
     if(!isAuthenticated){
         navigate("/login");
     }
-},[]);
+},[isAuthenticated]);
 
 useEffect(()=>{
     if( userId && isLoading){
@@ -32,19 +32,16 @@ useEffect(()=>{
     }
 },[isLoading,userId,dispatch])
 
-useEffect(()=>{
-    if(location.pathname.includes("/file/")){
-        setShowSubNav(false);
-    }
-},[location.pathname])
+// useEffect(()=>{
+//     if(location.pathname.includes("/file/")){
+//         setShowSubNav(false);
+//     }
+// },[location.pathname])
 
     return(
       <Fragment>
-        <SubNav />
-        {/* { showSubNav ? <SubNav /> : ""}  */}
         <Outlet/>
      </Fragment>
     );
 }
-export default Dashboard;
-
+export default Dashboard

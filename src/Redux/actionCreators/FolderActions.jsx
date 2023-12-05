@@ -55,7 +55,7 @@ export const createFolder =  (data ,setSuccess) => async (dispatch)=>{
   });
 };
 
-const addToParentSubFolders = async (folderId,parentId) =>{
+export const addToParentSubFolders = async (folderId,parentId) =>{
    try{
     const folderRef = fire.firestore().collection("folders").doc(parentId);
     const folderSnapshot = await folderRef.get();

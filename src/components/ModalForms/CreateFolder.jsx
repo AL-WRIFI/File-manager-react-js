@@ -1,10 +1,11 @@
 import { faFolderPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { createFolder } from "../../Redux/actionCreators/FolderActions";
+import { createFolder } from "../../Redux/actionCreators/FolderActions/CreateFolder";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const CreateFolder = () => {
 
@@ -63,10 +64,13 @@ const CreateFolder = () => {
     }
     
     try {
-      dispatch(createFolder(data,setSuccess));
+      dispatch(createFolder(data));
+      toast.success("Created Folder Successfully"+data.name);
+      setSuccess(true);
     } catch (error) {
       console.error("Error Createing file:", error);
       toast.error("Error Createing file");
+      setSuccess(false);
     }
   };
 
@@ -74,7 +78,7 @@ const CreateFolder = () => {
 
   useEffect(()=>{
     if(success){
-      // setFolderName("");
+      setFolderName("");
       setShowModal(false);
       setSuccess(false);
     }
@@ -111,13 +115,11 @@ const CreateFolder = () => {
           </Form>
         </Modal.Body>
       </Modal>
-      <Button
-        onClick={() => toggle()}
-        variant="outline-dark"
-        className="border-1 d-flex align-items-center justify-content-between rounded-2">
-        <FontAwesomeIcon icon={faFolderPlus} />
-        &nbsp; Create Folder
-      </Button>
+      <a  onClick={() => toggle()}  className="">
+      <FontAwesomeIcon icon={faFolderPlus} />
+          &nbsp; Folder 
+      </a>
+      
     </>
   );
 };

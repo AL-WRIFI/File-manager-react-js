@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState ,Fragment } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { createFile } from "../../Redux/actionCreators/FileActions";
+import { createFile } from "../../Redux/actionCreators/FileActions/CreateFile";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const CreateFile = () => {
 
@@ -66,12 +67,13 @@ const CreateFile = () => {
   }
 
   try {
-    dispatch(createFile(data,setSuccess));
+    dispatch(createFile(data));
+    setSuccess(true);
+    toast.success("Created File Successfully"+data.name);
   } catch (error) {
     console.error("Error Createing file:", error);
     toast.error("Error Createing file");
   }
-   
   };
 
   useEffect(()=>{
@@ -112,10 +114,10 @@ const CreateFile = () => {
           </Form>
         </Modal.Body>
       </Modal>
-      <Button onClick={() => toggle()} variant="outline-dark"className="border-1 d-flex align-items-center justify-content-between rounded-2" >
+      <a onClick={() => toggle()} className=" "  >
         <FontAwesomeIcon icon={faFileAlt} />
-             &nbsp; Create File
-      </Button>
+             &nbsp;&nbsp; File
+      </a>
     </Fragment>
   );
 };

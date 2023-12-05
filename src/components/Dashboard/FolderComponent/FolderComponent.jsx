@@ -2,11 +2,14 @@ import { Fragment } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import ShowItems from "../ShowItems";
-import { faFileAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faFileAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { cutFile, pasteFile } from "../../../Redux/actionCreators/FileActions";
-import { cutActionFolder, pasetActionFolder } from "../../../Redux/actionCreators/FolderActions";
-import { toast } from "react-toastify";
+import { pasteFile } from "../../../Redux/actionCreators/FileActions/PasteFile";
+import { MoveFile } from "../../../Redux/actionCreators/FileActions/MoveFile";
+import { MoveFolder } from "../../../Redux/actionCreators/FolderActions/MoveFolder";
+import { pasetFolder } from "../../../Redux/actionCreators/FolderActions/PasteFolder";
+
+// import { toast } from "react-toastify";
 
 
 const FolderComponent=()=>{
@@ -50,8 +53,8 @@ const FolderComponent=()=>{
     const getTypeActions = (type) =>{
 
       const actions = type === "folder" ? 
-      {cut: cutActionFolder , paste: pasetActionFolder}: 
-      {cut: cutFile , paste: pasteFile};
+      {cut: MoveFolder , paste: pasetFolder}: 
+      {cut: MoveFile , paste: pasteFile};
 
       return actions;
     }
@@ -60,6 +63,7 @@ const FolderComponent=()=>{
       
           const name = checkAlreadyExists(filesBuffer.item.data.name);
           const docId = filesBuffer.item.docId;
+          const parentId = filesBuffer.item.data.parent;
           const data = {
                 ...filesBuffer.item.data,
                name : name,
@@ -69,7 +73,7 @@ const FolderComponent=()=>{
       
         const actions = getTypeActions(filesBuffer.item.data.type);
         filesBuffer.action === "cut" ?
-        dispatch(actions.cut(docId,data)):
+        dispatch(actions.cut(docId,data,parentId)):
         dispatch(actions.paste(docId,data));              
     }  
         
