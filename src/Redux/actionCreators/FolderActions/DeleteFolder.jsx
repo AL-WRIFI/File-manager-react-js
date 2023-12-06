@@ -15,13 +15,13 @@ export const deleteFolderAndSubfolders = (folder) => async (dispatch) => {
       const snapshot = await folderRef.get();
       if (snapshot.exists) {
         
-        const filesQuerySnapshot = await DB.collection('files').where('parent', '==', folderRef.id).get();
-        filesQuerySnapshot.forEach(async (file) => {
+        const subFiles = await DB.collection('files').where('parent', '==', folderRef.id).get();
+       
+        subFiles.forEach(async (file) => {
           await DB.collection('files').doc(file.id).delete();
         });
-    
-        const subfoldersArray = snapshot.data().subFolders || [];
   
+        const subfoldersArray = snapshot.data().subFolders || [];
         subfoldersArray.forEach(async (subfolderId) => {
           const subfolderRef = DB.collection('folders').doc(subfolderId);
           const subfolderBatch = DB.batch();
@@ -44,13 +44,52 @@ export const deleteFolderAndSubfolders = (folder) => async (dispatch) => {
   try {
     await deleteFolder(folderRef, mainBatch);
     await mainBatch.commit();
-    await removeFromParentSubFolders(folder.data.parent ,folderId)
+    await removeFromParentSubFolders(folderId ,folder.data.parent)
     await dispatch(removeFolder(folderId));
     toast.success('Folder Deleted successfully!');
   } catch (error) {
     console.error('حدث خطأ أثناء حذف المجلد: ', error.message);
   }
 };
+
+
+//  export const deleteFolderAndSubfolders = async (folderId) => {
+//   try {
+//     const DB = fire.firestore();
+//     const folderRef = DB.collection('folders').doc(folderId);
+
+//     const subfoldersSnapshot = await folderRef.collection('subFolders').get();
+
+//     subfoldersSnapshot.forEach(async (subfolderDoc) => {
+//       const subfolderId = subfolderDoc.id;
+//       await deleteFolderAndSubfolders(subfolderId);
+//     });
+
+//     const filesSnapshot = await folderRef.collection('subFiles').get();
+
+    
+//     filesSnapshot.forEach(async (fileDoc) => {
+//       const fileId = fileDoc.id;
+//       await fileDoc.ref.delete();
+//     });
+
+//     const parentData = (await folderRef.get()).data();
+//     if (parentData) {
+//       const updatedSubFolders = parentData.subFolders.filter((subFolder) => subFolder !== folderId);
+//       await folderRef.update({
+//         subFolders: updatedSubFolders,
+//       });
+//     }
+
+//     await folderRef.delete();
+
+//     console.log(`Folder ${folderId} and its subfolders/files deleted successfully.`);
+//   } catch (error) {
+//     console.error('Error deleting folder and subfolders/files:', error.message);
+//   }
+// };
+
+
 
 
 

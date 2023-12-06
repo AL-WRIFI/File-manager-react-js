@@ -23,8 +23,8 @@ export const pasetFolder = (docId,data) => async (dispatch) => {
         if (sourceSnapshot.exists) {
           const destinationFolderData = {
             ...folderData,
-            subFiles: [],
-            subFolders: [],
+            // subFiles: [],
+            // subFolders: [],
             parent: destinationParentId,
           };
           
