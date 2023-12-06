@@ -1,122 +1,103 @@
-import { faFileAlt, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {  faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState ,Fragment } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { createFile } from "../../Redux/actionCreators/FileActions";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { RenameFile } from "../../Redux/actionCreators/FileActions/RenameFile";
+import { RenameFolder } from "../../Redux/actionCreators/FolderActions/RenameFolder";
 
-const Rename = ({item}) => {
-
+const Rename = ({ item: { data = {}, docId } = {} }) => {
+  const { type, name } = data;
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
-  const [fileName, setFileName] = useState("");
-  const [success, setSuccess] = useState(false);
-  
-  const toggle = () => {
-    setShowModal(!showModal);
+  const [itemName, setItemName] = useState(name);
+
+  const toggle = () => setShowModal(!showModal);
+
+  const { userFolders, userFiles } = useSelector((state) => ({
+    userFolders: state.Folders.userFolders.filter((folder) => folder.data.parent === state.Folders.currentFolder),
+    userFiles: state.Files.userFiles.filter((file) => file.data.parent === state.Folders.currentFolder),
+  }));
+
+  const checkAlreadyExists = (name) => {
+    const namesList = type === "folder" ? userFolders : userFiles;
+    return namesList.some((item) => item.data.name === name);
   };
-  const { userFiles , user ,currentFolder ,currentFolderData} = useSelector((state)=>({
-    userFiles: state.Files.userFiles,
-    user : state.auth.user,
-    currentFolder : state.Folders.currentFolder,
-    currentFolderData : state.Folders.userFolders.find((folder)=> folder.docId === state.Folders.currentFolder),
-
-  }),shallowEqual);
-
-   const checkAlreadyExists =(name ,extention) =>{
-    !extention ? name = name +".txt":'';
-    return userFiles.some(
-      (items) =>
-        items.data.parent === currentFolder && items.data.name === name
-    );
-  }
 
   const handleFileSubmit = (e) => {
-   e.preventDefault();
+    e.preventDefault();
 
-   let extention = false;
-   if(fileName.split(".").length >1){
-     extention = true;
-   }
-   
-   if (!fileName) {
-    toast.error("File Name cannot by empty");
-    return;
-  }
-  
-  if (checkAlreadyExists(fileName,extention)) {
-    toast.error("Folder already exists");
-    return;
-  }
+    const extention = itemName.split(".").length > 1;
+    const isFolder = type === "folder";
+    const isNameEmpty = !itemName.trim();
 
-  const data = {
-    createdAt: new Date(),
-    createdBy: user.displayName,
-    lastAccessed: null,
-    type: "file",
-    name: extention ? fileName : `${fileName}.txt`,
-    path: currentFolder === "root" ? [] : [...currentFolderData.data.path,currentFolder],
-    parent: currentFolder,
-    updatedAt: new Date(),
-    userId: user.uid,
-    extent: extention ? fileName.split(".").pop() : "txt",
-    data: "",
-    url: "",
-  }
+    if (isNameEmpty) {
+      toast.error(`${isFolder ? "Folder" : "File"} Name cannot be empty`);
+      return;
+    }
 
-  try {
-    dispatch(createFile(data,setSuccess));
-  } catch (error) {
-    console.error("Error Createing file:", error);
-    toast.error("Error Createing file");
-  }
-   
+    if (checkAlreadyExists(itemName)) {
+      toast.error(`${isFolder ? "Folder" : "File"} already exists`);
+      return;
+    }
+
+    const updatedName = isFolder ? itemName : extention ? `${itemName}.txt` : itemName;
+    const updatedExtent = extention ? itemName.split(".").pop() : "txt";
+
+    const data = {
+      lastAccessed: null,
+      updatedAt: new Date(),
+      name: updatedName,
+    };
+    if (!isFolder) { data.extent = updatedExtent }
+    // if (isFolder) {
+    //   delete data.extent;
+    // }
+
+    try {
+      dispatch(isFolder ? RenameFolder(data, docId) : RenameFile(data, docId));
+      toast.success(`Edited ${isFolder ? "Folder" : "File"} Name Successfully`);
+      setShowModal(false);
+    } catch (error) {
+      console.error(`Error Editing ${isFolder ? "Folder" : "File"} Name:`, error);
+      toast.error(`Error Editing ${isFolder ? "Folder" : "File"} Name: ${error.message}`);
+    }
   };
 
-  useEffect(()=>{
-    if(success){
-      //setFileName("");
-      setShowModal(false);
-      setSuccess(false);
-    }
-  },[success])
-  
+  useEffect(() => {
+    setItemName(name);
+  }, [name]);
+
   return (
     <Fragment>
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal show={showModal} onHide={toggle}>
         <Modal.Header>
-          <Modal.Title>Create File</Modal.Title>
-          <Button
-            variant="white"
-            style={{ cursor: "pointer" }}
-            onClick={() => toggle()}
-          >
+          <Modal.Title>{type === "file" ? "Edit File" : "Edit Folder"}</Modal.Title>
+          <Button variant="white" style={{ cursor: "pointer" }} onClick={toggle}>
             <FontAwesomeIcon icon={faTimes} />
           </Button>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleFileSubmit}>
-
             <Form.Group controlId="formBasicFolderName" className="my-2">
-              <Form.Control type="text" placeholder="File Name e,g txt..."
-                value={fileName}onChange={(e) => setFileName(e.target.value)}/>
+              <Form.Control
+                type="text"
+                placeholder={`${type === "file" ? "File" : "Folder"} Name e.g. txt...`}
+                value={itemName}
+                onChange={(e) => setItemName(e.target.value)}
+              />
             </Form.Group>
-
             <Form.Group controlId="formBasicFolderSubmit" className="mt-5">
-              <Button type="submit" className="form-control" variant="primary">
-                Add File
+              <Button onClick={handleFileSubmit} className="form-control" variant="primary">
+                Rename {type === "file" ? "File" : "Folder"}
               </Button>
             </Form.Group>
-
           </Form>
         </Modal.Body>
       </Modal>
-      <div type="button" onClick={() => toggle()} >
-        {/* <FontAwesomeIcon icon={faFileAlt} />
-             &nbsp; Create File */}
-             Rename
+      <div type="button" onClick={toggle}>
+        Rename
       </div>
     </Fragment>
   );

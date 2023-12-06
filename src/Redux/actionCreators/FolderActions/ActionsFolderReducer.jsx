@@ -32,7 +32,7 @@ export const moveFolder = (payload) => ({
   type: types.MOVE_FOLDER,
   payload,
 });
-export const renameFolder = (payload) => ({
+export const renameFolder = (name , docId) => ({
   type: types.RENAME_FOLDER,
-  payload,
+  payload : {name : name , docId : docId},
 });

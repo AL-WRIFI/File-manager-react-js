@@ -29,7 +29,7 @@ export const addFile= (payload)=>({
     payload,
   });
   
-  export const renameFolder = (payload) => ({
+  export const renameFile = (name , docId) => ({
     type: types.RENAME_FILE,
-    payload,
+    payload : {name : name , docId : docId},
   });

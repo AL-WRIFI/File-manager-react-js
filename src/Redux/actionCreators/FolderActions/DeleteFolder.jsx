@@ -6,10 +6,6 @@ import { removeFromParentSubFolders } from "../SharedActions/SharedActions";
 
 
 
-
-
-
-
 export const deleteFolderAndSubfolders = (folder) => async (dispatch) => {
   const DB = fire.firestore();
   const folderId = folder.docId;
