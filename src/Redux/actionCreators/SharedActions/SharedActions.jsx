@@ -9,11 +9,15 @@ export const addToParentSubFiles = async (fileId,parentId) =>{
      const fileRef = fire.firestore().collection("folders").doc(parentId);
      const fileSnapshot = await fileRef.get();
      const subFilesArray = await fileSnapshot.get("subFiles") || [];
-
+        
      await fileRef.update({
       subFiles: [...subFilesArray , fileId],
      })
-  
+     
+    //  const subFilesA = await fileSnapshot.get("subFiles") || [];
+    //  subFilesA.forEach((id)=>{
+    //      console.log("---",id);
+    //  })  
     }catch(error){
      console.error(" error " ,error);
     }
@@ -60,8 +64,6 @@ export const removeFromParentSubFolders = async (folderId ,parentId) =>{
    const folderSnapshot = await folderRef.get();
    const subfoldersArray = await folderSnapshot.get("subFolders") || [];
    const subFolders = subfoldersArray.filter((folder)=> folder !== folderId);
-
-   console.log(subfoldersArray , subFolders)
    await folderRef.update({
      subFolders : subFolders,
    })

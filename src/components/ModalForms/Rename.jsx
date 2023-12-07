@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { RenameFile } from "../../Redux/actionCreators/FileActions/RenameFile";
 import { RenameFolder } from "../../Redux/actionCreators/FolderActions/RenameFolder";
 
+
 const Rename = ({ item: { data = {}, docId } = {} }) => {
   const { type, name } = data;
   const dispatch = useDispatch();

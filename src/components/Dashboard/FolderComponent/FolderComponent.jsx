@@ -1,8 +1,8 @@
 import { Fragment } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ShowItems from "../ShowItems";
-import { faFileAlt } from "@fortawesome/free-solid-svg-icons";
+import { faFileAlt, faLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { pasteFile } from "../../../Redux/actionCreators/FileActions/PasteFile";
 import { MoveFile } from "../../../Redux/actionCreators/FileActions/MoveFile";
@@ -16,7 +16,7 @@ const FolderComponent=()=>{
     
     const {folderId} = useParams();
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const { currentFolderData,filesBuffer , childFolders ,childFiles } = useSelector((state)=>({
 
         currentFolderData : state.Folders.userFolders.find(
@@ -34,7 +34,7 @@ const FolderComponent=()=>{
     }),shallowEqual)
 
     const checkAlreadyExists = (name) =>{
-     
+ 
       let newName = name;
       let counter = 1;
       const dotIndex = newName.lastIndexOf('.');
@@ -78,13 +78,19 @@ const FolderComponent=()=>{
     }  
         
     return(
-        <Fragment>     
+        <Fragment>
+          <div type="button" className="d-flex align-items-center p-2 justify-content-between">
+          <div className="position-relative " onClick={()=>{navigate(-1)}} ><FontAwesomeIcon icon={faLeftLong} />
+          </div>
           {filesBuffer.length !=0 &&(
-            <div type="button" onClick={pasetAction} className="d-flex align-items-center justify-content-end">
-               Paste &nbsp;
-              <FontAwesomeIcon icon={faFileAlt} />
-            </div>)
+            
+              <div onClick={pasetAction} > Paste &nbsp;
+                <FontAwesomeIcon icon={faFileAlt} />
+              </div>
+              
+            )
           }
+          </div>
            {
              childFolders.length > 0 || childFiles.length > 0 ? 
              (
