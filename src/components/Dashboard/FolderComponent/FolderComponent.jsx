@@ -53,8 +53,8 @@ const FolderComponent=()=>{
     const getTypeActions = (type) =>{
 
       const actions = type === "folder" ? 
-      {cut: MoveFolder , paste: pasetFolder}: 
-      {cut: MoveFile , paste: pasteFile};
+      {move: MoveFolder , paste: pasetFolder}: 
+      {move: MoveFile , paste: pasteFile};
 
       return actions;
     }
@@ -73,7 +73,7 @@ const FolderComponent=()=>{
       
         const actions = getTypeActions(filesBuffer.item.data.type);
         filesBuffer.action === "cut" ?
-        dispatch(actions.cut(docId,data,parentId)):
+        dispatch(actions.move(docId,data,parentId)):
         dispatch(actions.paste(docId,data));              
     }  
         

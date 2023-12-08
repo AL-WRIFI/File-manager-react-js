@@ -15,13 +15,15 @@ export const deleteFolderAndSubfolders = (folder) => async (dispatch) => {
       const snapshot = await folderRef.get();
       if (snapshot.exists) {
         
-        const subFiles = await DB.collection('files').where('parent', '==', folderRef.id).get();
+        const subFiles = await snapshot.data().subFiles || [];
        
         subFiles.forEach(async (file) => {
-          await DB.collection('files').doc(file.id).delete();
+          await DB.collection('files').doc(file).delete();
         });
   
+        
         const subfoldersArray = snapshot.data().subFolders || [];
+        
         subfoldersArray.forEach(async (subfolderId) => {
           const subfolderRef = DB.collection('folders').doc(subfolderId);
           const subfolderBatch = DB.batch();

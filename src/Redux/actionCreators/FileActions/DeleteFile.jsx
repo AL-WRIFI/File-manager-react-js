@@ -15,7 +15,7 @@ export const deleteFile = (file) => async (dispatch) => {
       thumbnailUrl && await fire.storage().refFromURL(thumbnailUrl).delete();
   
       await fire.firestore().collection('files').doc(file.docId).delete();
-      removeFromParentSubFiles(file.docId , file.data.parent);
+      await removeFromParentSubFiles(file.docId , file.data.parent);
       dispatch(removeFile(file.docId));
       toast.success("File Deleted Successfully");
     } catch (error) {

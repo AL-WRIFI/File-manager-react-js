@@ -1,23 +1,16 @@
 import fire from "../../../config/firebase";
 
 
-
 export const addToParentSubFiles = async (fileId,parentId) =>{
     if(parentId === "root"){ return ;}
     
     try{
-     const fileRef = fire.firestore().collection("folders").doc(parentId);
-     const fileSnapshot = await fileRef.get();
-     const subFilesArray = await fileSnapshot.get("subFiles") || [];
-        
-     await fileRef.update({
-      subFiles: [...subFilesArray , fileId],
-     })
+     const foldereRef = fire.firestore().collection("folders").doc(parentId);        
+     await foldereRef.update({
+      subFiles: fire.firebase.firestore.FieldValue.arrayUnion(fileId),
+     }) 
      
-    //  const subFilesA = await fileSnapshot.get("subFiles") || [];
-    //  subFilesA.forEach((id)=>{
-    //      console.log("---",id);
-    //  })  
+    
     }catch(error){
      console.error(" error " ,error);
     }
@@ -29,11 +22,9 @@ export const addToParentSubFiles = async (fileId,parentId) =>{
 
     try{
      const fileRef = fire.firestore().collection("folders").doc(parentId);
-     const fileSnapshot = await fileRef.get();
-     const subFilesArray = await fileSnapshot.get("subFiles") || [];
-     const subFiles = subFilesArray.filter((file)=> file !== fileId)
+     
      await fileRef.update({
-      subFiles: [...subFiles],
+      subFiles: fire.firebase.firestore.FieldValue.arrayRemove(fileId),
      })
   
     }catch(error){
@@ -45,11 +36,8 @@ export const addToParentSubFolders = async (folderId,parentId) =>{
   if(parentId === "root"){ return ;}
   try{
    const folderRef = fire.firestore().collection("folders").doc(parentId);
-   const folderSnapshot = await folderRef.get();
-   const subfoldersArray = await folderSnapshot.get("subFolders") || [];
-
    await folderRef.update({
-     subFolders : [...subfoldersArray , folderId],
+     subFolders : fire.firebase.firestore.FieldValue.arrayUnion(folderId),
    })
 
   }catch(error){
@@ -61,11 +49,8 @@ export const removeFromParentSubFolders = async (folderId ,parentId) =>{
   if(parentId === "root"){ return ;}
   try{
    const folderRef = fire.firestore().collection("folders").doc(parentId);
-   const folderSnapshot = await folderRef.get();
-   const subfoldersArray = await folderSnapshot.get("subFolders") || [];
-   const subFolders = subfoldersArray.filter((folder)=> folder !== folderId);
    await folderRef.update({
-     subFolders : subFolders,
+     subFolders : fire.firebase.firestore.FieldValue.arrayRemove(folderId),
    })
 
   }catch(error){
