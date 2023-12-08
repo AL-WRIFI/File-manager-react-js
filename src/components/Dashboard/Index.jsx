@@ -1,4 +1,4 @@
-import React,{ Fragment } from "react";
+import { Fragment } from "react";
 import ShowItems from "./ShowItems";
 import { useDispatch, useSelector } from "react-redux";
 import Recentfile from "../../RecentFiles";
@@ -13,14 +13,15 @@ import { pasetFolder } from "../../Redux/actionCreators/FolderActions/PasteFolde
 import { pasteFile } from "../../Redux/actionCreators/FileActions";
 import { MoveFile } from "../../Redux/actionCreators/FileActions/MoveFile";
 import { MoveFolder } from "../../Redux/actionCreators/FolderActions/MoveFolder";
+import { goBack } from "../../Redux/actionCreators/FolderActions/ActionsFolderReducer";
 
 function Index(){
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const {isLoading , childFolders ,childFiles ,currentFolder ,filesBuffer ,currentFolderData} = useSelector((state)=>({
-        isLoading : state.Folders.isLoading,
         
+        isLoading : state.Folders.isLoading, 
         currentFolder : state.Folders.currentFolder,
         filesBuffer: state.Files.filesBuffer,
 
@@ -31,12 +32,10 @@ function Index(){
             (folder)=> (folder.data.parent === state.Folders.currentFolder)),
 
         childFiles : state.Files.userFiles.filter(
-            (file)=> (file.data.parent === state.Folders.currentFolder)),
-            
+            (file)=> (file.data.parent === state.Folders.currentFolder)),     
     }));
 
     const checkAlreadyExists = (name) =>{
- 
         let newName = name;
         let counter = 1;
         const dotIndex = newName.lastIndexOf('.');
@@ -48,39 +47,42 @@ function Index(){
             newName = `${baseName}(${counter})${extension}`;
             counter++;
         }
-       
-       return newName; 
-     }
-      
-      const getTypeActions = (type) =>{
-  
+
+        return newName; 
+    }
+        const getTypeActions = (type) =>{
         const actions = type === "folder" ? 
         {move: MoveFolder , paste: pasetFolder}: 
         {move: MoveFile , paste: pasteFile};
-  
+
         return actions;
-      }
-       
+    }
+
     const pasetAction = () =>{
-      
         const name = checkAlreadyExists(filesBuffer.item.data.name);
         const docId = filesBuffer.item.docId;
         const parentId = filesBuffer.item.data.parent;
+        const path = currentFolder !== "root" ? [...currentFolderData.data.path,currentFolderData.docId]:[];
         const data = {
-              ...filesBuffer.item.data,
-             name : name,
-             path : [...currentFolderData.data.path,currentFolderData.docId],
-             parent : currentFolderData.docId,
-          }
+            ...filesBuffer.item.data,
+            name : name,
+            path : path,
+            parent : currentFolder,
+        }
     
-      const actions = getTypeActions(filesBuffer.item.data.type);
-      filesBuffer.action === "cut" ?
-      dispatch(actions.move(docId,data,parentId)):
-      dispatch(actions.paste(docId,data));              
-  }  
+    const actions = getTypeActions(filesBuffer.item.data.type);
+    filesBuffer.action === "cut" ?
+    dispatch(actions.move(docId,data,parentId)):
+    dispatch(actions.paste(docId,data));              
+    }  
+
+    const goBackFolder = ()=>{
+       dispatch(goBack());
+       navigate(-1);
+    }
 
     return(
-     <Fragment>
+    <Fragment>
         <div className="container">
             <div className="row mt-5">
                 <SidBar />
@@ -92,12 +94,10 @@ function Index(){
                                     <div className="search-box mb-2 me-2">
                                         <div className="d-flex align-items-center justify-content-between ">
                                             {currentFolder !== "root" ?
-                                             <div type="button" onClick={()=>{navigate(-1)}} className="m-2">
-                                              <FontAwesomeIcon icon={faCircleArrowRight} rotation={180} size="xl" className="" />  
-                                             </div>
-                                             : ""
-                                            }
-                                              
+                                                <div type="button" onClick={goBackFolder} className="m-2">
+                                                    <FontAwesomeIcon icon={faCircleArrowRight} rotation={180} size="xl" className="" />  
+                                                </div>
+                                            : ""}     
                                             <input type="text" className="form-control bg-light border-light rounded " placeholder="Search..." />
                                             {/* <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" className="eva eva-search-outline search-icon"><g data-name="Layer 2"><g data-name="search"><rect width="24" height="24" opacity="0"></rect><path d="M20.71 19.29l-3.4-3.39A7.92 7.92 0 0 0 19 11a8 8 0 1 0-8 8 7.92 7.92 0 0 0 4.9-1.69l3.39 3.4a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 11a6 6 0 1 1 6 6 6 6 0 0 1-6-6z"></path></g></g></svg> */}
                                         </div>
@@ -124,16 +124,13 @@ function Index(){
                                                 <i className="mdi mdi-dots-vertical font-size-20"><FontAwesomeIcon icon={faAlignRight} /></i>
                                             </a>
                                             <div className="dropdown-menu dropdown-menu-end">
-                                               
                                                     {filesBuffer.length !=0 &&
-                                                     
                                                     <div type="button" className="dropdown-item" >                                   
-                                                    <div onClick={pasetAction} > Paste &nbsp;
-                                                    <FontAwesomeIcon icon={faPaste}/>
-                                                    </div>
+                                                        <div onClick={pasetAction} > Paste &nbsp;
+                                                            <FontAwesomeIcon icon={faPaste}/>
+                                                        </div>
                                                     </div>               
-                                                    }
-                                                
+                                                    }                                               
                                                 <a className="dropdown-item" href="#">select</a>
                                                 <a className="dropdown-item" href="#">share</a>
                                                 <a className="dropdown-item" href="#">info</a>
@@ -146,9 +143,8 @@ function Index(){
                             {isLoading ? (
                                 <h1 className="display-1 my-5 text-center">Loading...</h1>
                                 ): currentFolder === "root" ? ( 
-                                 <Fragment>
-                                    {
-                                      childFolders.length > 0 || childFiles.length > 0 ?    
+                                <Fragment>
+                                    {childFolders.length > 0 || childFiles.length > 0 ?    
                                         <Fragment>
                                         {childFolders.length > 0 &&(
                                             <ShowItems title="Folders" type="folder" items={childFolders}/>
@@ -157,17 +153,17 @@ function Index(){
                                             <ShowItems title="Files" type="file" items={childFiles}/>
                                             )}  
                                         </Fragment>
-                                       :<p className="text-center my-5"> Empty Folder </p>
+                                    :<p className="text-center my-5"> No files found yet </p>
                                     }     
-                                 </Fragment>
+                                </Fragment>
                                 ):<Outlet/>} 
                             <Recentfile />
                         </div>
                     </div>
                 </div>
             </div>
-            </div>              
-        </Fragment>
+        </div>              
+    </Fragment>
     )  
 }
 

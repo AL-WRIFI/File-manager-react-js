@@ -33,3 +33,4 @@ export const addFile= (payload)=>({
     type: types.RENAME_FILE,
     payload : {name : name , docId : docId},
   });
+  

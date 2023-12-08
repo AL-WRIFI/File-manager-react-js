@@ -18,7 +18,7 @@ function DropdownItems({item}) {
         <Dropdown.Item onClick={()=>{dispatch(copyItemToBuffer({item,action:"copy"}))}} >Copy</Dropdown.Item>
         <Dropdown.Item onClick={()=>{dispatch(copyItemToBuffer({item,action:"cut"}))}} >Cut</Dropdown.Item>
         <Dropdown.Item onClick={()=>{dispatch(item.data.type.startsWith('folder')? 
-           deleteFolderAndSubfolders(item) : deleteFile(item) )}}>Delete</Dropdown.Item>
+          deleteFolderAndSubfolders(item) : deleteFile(item) )}}>Delete</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

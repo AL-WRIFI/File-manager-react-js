@@ -3,7 +3,9 @@ import * as types from "../actionsTypes/FolderActionsType";
 const initialState = {
     isLoading:true,
     currentFolder:"root",
+    folderStack:[],
     userFolders:[],
+
 }
 
 
@@ -26,10 +28,20 @@ const FolderReducer = ( state=initialState,action) =>{
         };
         
         case types.CHANGE_FOLDER:
-        return{
-            ...state,
-            currentFolder: action.payload,
-        };
+            const newCurrentFolder = action.payload;   
+            return{
+                ...state,
+                folderStack: [...state.folderStack, newCurrentFolder],
+                currentFolder: newCurrentFolder,
+            };
+        case types.GO_BACK:
+            const newFolderStack = [...state.folderStack];
+            newFolderStack.pop();
+            return {
+                ...state,
+                folderStack: newFolderStack,
+                currentFolder: newFolderStack[newFolderStack.length-1],
+            };
         case types.COPY_FOLDERS_TOBUFFER:
         return{
             ...state,

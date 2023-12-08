@@ -29,14 +29,14 @@ function App() {
       <NavbarComponent />
       <ToastContainer/>
       <Routes>
-        <Route  path="/var" element={<Varx/>} />
+        {/*<Route  path="/var" element={<Varx/>} />*/}
         <Route  path="/login" element={<Login/>} />
         <Route  path="/signup" element={<Register />}/>
         <Route  path="/dashboard" element={<Dashboard />}>
-              <Route path='' element={<Index />} >
-                <Route  path="folder/:folderId" element={<FolderComponent />}/>
-                <Route  path="file/:fileId" element={<FileComponent />}/>
-              </Route>
+          <Route path='' element={<Index />} >
+            <Route  path="folder/:folderId" element={<FolderComponent />}/>
+            <Route  path="file/:fileId" element={<FileComponent />}/>
+          </Route>
         </Route>        
       </Routes>
     </Fragment>

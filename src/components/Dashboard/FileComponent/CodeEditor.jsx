@@ -24,20 +24,20 @@ const CodeEditor = ({ fileName, data, setData }) => {
     json: "javascript",
   };
 
-  const handleKeyDown = (evt) => {
+  const handleKeyDown = (e) => {
     let value = content,
-      selStartPos = evt.currentTarget.selectionStart;
+      selStartPos = e.currentTarget.selectionStart;
 
-    console.log(evt.currentTarget);
+    console.log(e.currentTarget);
 
-    if (evt.key === "Tab") {
+    if (e.key === "Tab") {
       value =
         value.substring(0, selStartPos) +
         "    " +
         value.substring(selStartPos, value.length);
-      evt.currentTarget.selectionStart = selStartPos + 3;
-      evt.currentTarget.selectionEnd = selStartPos + 4;
-      evt.preventDefault();
+      e.currentTarget.selectionStart = selStartPos + 3;
+      e.currentTarget.selectionEnd = selStartPos + 4;
+      e.preventDefault();
 
       setData(value);
     }

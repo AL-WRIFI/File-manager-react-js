@@ -36,3 +36,7 @@ export const renameFolder = (name , docId) => ({
   type: types.RENAME_FOLDER,
   payload : {name : name , docId : docId},
 });
+
+export const goBack = () => ({
+  type: types.GO_BACK,
+});
