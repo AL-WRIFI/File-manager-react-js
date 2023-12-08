@@ -1,9 +1,7 @@
 import { Fragment } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ShowItems from "../ShowItems";
-import { faFileAlt, faLeftLong } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { pasteFile } from "../../../Redux/actionCreators/FileActions/PasteFile";
 import { MoveFile } from "../../../Redux/actionCreators/FileActions/MoveFile";
 import { MoveFolder } from "../../../Redux/actionCreators/FolderActions/MoveFolder";
@@ -16,7 +14,6 @@ const FolderComponent=()=>{
     
     const {folderId} = useParams();
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const { currentFolderData,filesBuffer , childFolders ,childFiles } = useSelector((state)=>({
 
         currentFolderData : state.Folders.userFolders.find(
@@ -79,31 +76,19 @@ const FolderComponent=()=>{
         
     return(
         <Fragment>
-          <div type="button" className="d-flex align-items-center p-2 justify-content-between">
-          <div className="position-relative " onClick={()=>{navigate(-1)}} ><FontAwesomeIcon icon={faLeftLong} />
-          </div>
-          {filesBuffer.length !=0 &&(
-            
-              <div onClick={pasetAction} > Paste &nbsp;
-                <FontAwesomeIcon icon={faFileAlt} />
-              </div>
-              
-            )
-          }
-          </div>
-           {
-             childFolders.length > 0 || childFiles.length > 0 ? 
-             (
+
+           {childFolders.length > 0 || childFiles.length > 0 ? 
+             
                <Fragment>          
                  {childFolders.length > 0 &&(
-                    <ShowItems title="folder" type="folder" items={childFolders}/>
+                    <ShowItems title="Folders" type="folder" items={childFolders}/>
                     )}  
                  {childFiles.length > 0 &&(
-                    <ShowItems title="file" type="file" items={childFiles}/>
-                    )};  
+                    <ShowItems title="Files" type="file" items={childFiles}/>
+                    )}  
                </Fragment>
-              )
-            :(<p className="text-center my-5"> Empty Folder </p>)
+              
+            :<p className="text-center my-5"> Empty Folder </p>
            } 
            
         </Fragment>

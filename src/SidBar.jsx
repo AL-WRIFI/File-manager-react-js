@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import CreateFile from "./components/ModalForms/CreateFile";
 
 
 function SidBar(){
@@ -9,19 +10,19 @@ function SidBar(){
             <div className="col-12 col-lg-3">
             <div className="card">
                 <div className="card-body">
-                    <div className="d-grid"> <a href="javascript:;" className="btn btn-primary">+ Add File</a>
+                    <div className="d-grid"> <a href="#" className="btn btn-primary" ><CreateFile/></a>
                     </div>
                     <h5 className="my-3">My Drive</h5>
                     <div className="fm-menu">
-                        <div className="list-group list-group-flush"> <a href="javascript:;" className="list-group-item py-1"><i className="bx bx-folder me-2"></i><span>All Files</span></a>
-                            <a href="javascript:;" className="list-group-item py-1"><i className="bx bx-analyse me-2"></i><span>Recents</span></a>
-                            <a href="javascript:;" className="list-group-item py-1"><i className="bx bx-file me-2"></i><span>Documents</span></a>
-                            <a href="javascript:;" className="list-group-item py-1"><i className="bx bx-image me-2"></i><span>Images</span></a>
-                            <a href="javascript:;" className="list-group-item py-1"><i className="bx bx-video me-2"></i><span>Videos</span></a>
-                            <a href="javascript:;" className="list-group-item py-1"><i className="bx bx-music me-2"></i><span>Audio</span></a>
-                            <a href="javascript:;" className="list-group-item py-1"><i className="bx bx-beer me-2"></i><span>Zip Files</span></a>
-                            <a href="javascript:;" className="list-group-item py-1"><i className="bx bx-plug me-2"></i><span>Important</span></a>
-                            <a href="javascript:;" className="list-group-item py-1"><i className="bx bx-trash-alt me-2"></i><span>Deleted Files</span></a>
+                        <div className="list-group list-group-flush"> <a href="#" className="list-group-item py-1"><i className="bx bx-folder me-2"></i><span>All Files</span></a>
+                            <a href="#" className="list-group-item py-1"><i className="bx bx-analyse me-2"></i><span>Recents</span></a>
+                            <a href="#" className="list-group-item py-1"><i className="bx bx-file me-2"></i><span>Documents</span></a>
+                            <a href="#" className="list-group-item py-1"><i className="bx bx-image me-2"></i><span>Images</span></a>
+                            <a href="#" className="list-group-item py-1"><i className="bx bx-video me-2"></i><span>Videos</span></a>
+                            <a href="#" className="list-group-item py-1"><i className="bx bx-music me-2"></i><span>Audio</span></a>
+                            <a href="#" className="list-group-item py-1"><i className="bx bx-beer me-2"></i><span>Zip Files</span></a>
+                            <a href="#" className="list-group-item py-1"><i className="bx bx-plug me-2"></i><span>Important</span></a>
+                            <a href="#" className="list-group-item py-1"><i className="bx bx-trash-alt me-2"></i><span>Deleted Files</span></a>
                         </div>
                     </div>
                 </div>

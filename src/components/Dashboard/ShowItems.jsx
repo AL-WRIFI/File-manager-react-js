@@ -43,8 +43,9 @@ function ShowItems({title , items}){
                                         </div>
                                         )}
                                     </div>
-                                    <h6 className="mb-0 text-primary">{el.data.name}</h6>
-                                    {el.data.type === "folder"? <small>143 files</small> : ""}
+                                    <div className="mb-0 text-primary" style={{cursor: "pointer" , userSelect:"none"}} >
+                                        {el.data.name}</div>
+                                       {el.data.type === "folder"? <small style={{cursor: "pointer" , userSelect:"none"}} >143 files</small> : ""}
                                 </div>
                             </div>
                         </div>

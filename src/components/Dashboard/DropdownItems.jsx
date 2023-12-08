@@ -6,10 +6,9 @@ import { deleteFile } from '../../Redux/actionCreators/FileActions/DeleteFile';
 import { deleteFolderAndSubfolders } from '../../Redux/actionCreators/FolderActions/DeleteFolder';
 import Rename from '../ModalForms/Rename';
 function DropdownItems({item}) {
+
   const dispatch = useDispatch();
-  // const Re = () =>{
-  //  return ()
-  // }
+
   return (
     <Dropdown >
       <Dropdown.Toggle  className="btn-sm btn-light dropdown-toggle p-1 " />

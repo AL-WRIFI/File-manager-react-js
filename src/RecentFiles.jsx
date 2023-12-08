@@ -10,7 +10,7 @@ function Recentfile(){
         <div>
             <h5 className="mb-0">Recent Files</h5>
         </div>
-    <div className="ms-auto"><a href="javascript:;" className="btn btn-sm btn-outline-secondary">View all</a>
+    <div className="ms-auto"><a href="#" className="btn btn-sm btn-outline-secondary">View all</a>
     </div>
     </div>
     <div className="table-responsive mt-3">
