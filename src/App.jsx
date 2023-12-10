@@ -12,7 +12,8 @@ import Index from "./components/Dashboard/Index";
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Fragment } from 'react';
-import Varx from './vsr';
+import InfoFile from './components/Dashboard/infoFile';
+// import Varx from './vsr';
 function App() {
   
   const dispatch= useDispatch();
@@ -29,14 +30,17 @@ function App() {
       <NavbarComponent />
       <ToastContainer/>
       <Routes>
-        {/*<Route  path="/var" element={<Varx/>} />*/}
+        <Route  path="/var" element={<InfoFile/>} />
         <Route  path="/login" element={<Login/>} />
         <Route  path="/signup" element={<Register />}/>
+        <Route  path="/" to="/dashboard" />
+            {/* to
+       </Route> */}
         <Route  path="/dashboard" element={<Dashboard />}>
-          <Route path='' element={<Index />} >
-            <Route  path="folder/:folderId" element={<FolderComponent />}/>
-            <Route  path="file/:fileId" element={<FileComponent />}/>
-          </Route>
+                <Route path='' element={<Index />} >
+                <Route  path="folder/:folderId" element={<FolderComponent />}/>
+                <Route  path="file/:fileId" element={<FileComponent />}/>
+              </Route>
         </Route>        
       </Routes>
     </Fragment>

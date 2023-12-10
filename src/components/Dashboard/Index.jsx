@@ -6,7 +6,7 @@ import SidBar from "../../SidBar";
 import { Outlet, useNavigate } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAlignRight, faCircleArrowRight, faPaste } from "@fortawesome/free-solid-svg-icons";
-import CreateFile  from "../ModalForms/CreateFile";
+import  CreateFile  from "../ModalForms/CreateFile";
 import  CreateFolder  from "../ModalForms/CreateFolder";
 import  UploadFile  from "../ModalForms/UploadFile";
 import { pasetFolder } from "../../Redux/actionCreators/FolderActions/PasteFolder";

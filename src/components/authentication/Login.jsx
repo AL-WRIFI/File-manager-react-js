@@ -9,7 +9,8 @@ const Login = () => {
 
   const { isAuthenticated  } = useSelector((state) =>({ 
     isAuthenticated : state.auth.isAuthenticated ,
-   }),shallowEqual);
+   
+  }),shallowEqual);
 
     
 
@@ -32,15 +33,20 @@ const Login = () => {
     
     
     useEffect(()=>{
-      if(isAuthenticated){
+      setTimeout(()=>{
+        if(isAuthenticated){
           navigate("/dashboard");
-      }
-     },[]);
+        }
+      },5000)
+      
+    },[]);
+
+
     useEffect(()=>{
       if(success){
         navigate("/dashboard")
       }
-    },[success])
+    },[success]);
 
     return (
     <Container>

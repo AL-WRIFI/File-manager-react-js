@@ -45,7 +45,7 @@ export const signUpUser = (name,email,password ,setSuccess) =>(dispatch) =>{
     })
   }).catch((error)=>{
     console.log(error);
-    if (error.code === "auth/email-already-in-use") {
+    if (error.code === "auth/email already in use") {
       toast.error("Email Already Exists!");
     }
     if (error.code === "auth/weak-password") {

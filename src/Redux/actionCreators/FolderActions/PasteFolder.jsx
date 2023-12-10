@@ -9,7 +9,7 @@ import { createFolder } from "./CreateFolder";
 export const pasetFolder = (docId, data) => async (dispatch) => {
 
     const copyFolder = async (sourceFolderId, destinationParentId) => {
-      try {
+      try{
         const DB = fire.firestore();
         const sourceFolderSnapshot = await DB.collection('folders').doc(sourceFolderId).get();
         const sourceFolderData = sourceFolderSnapshot.data();
@@ -21,8 +21,6 @@ export const pasetFolder = (docId, data) => async (dispatch) => {
           subFolders: [],
         }
         const destinationFolderRef = await dispatch(createFolder(folderData));
-
-      
         const subFilesIds =  sourceFolderData.subFiles || [];
         await subFilesIds.forEach(async (file) => {
           const subFiles = await DB.collection('files').doc(file).get();
@@ -31,8 +29,7 @@ export const pasetFolder = (docId, data) => async (dispatch) => {
             parent: destinationFolderRef.id,
           };   
           await dispatch(createFile(newFileData));
-        });
-        
+        });      
         const subFolderIds =  sourceFolderData.subFolders || [];
         for (const subFolderId of subFolderIds) {
           await copyFolder(subFolderId, destinationFolderRef.id);

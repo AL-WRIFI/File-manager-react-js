@@ -10,8 +10,7 @@ export const uploadFile = (file, data, setSuccess) => async (dispatch) => {
     const uploadFileRef = fire.storage().ref(`files/${data.userId}/${data.name}`);
     
     try {
-      await uploadFileRef.put(file);
-      
+      await uploadFileRef.put(file);   
       const fileUrl = await uploadFileRef.getDownloadURL();
       const fullData = { ...data, url: fileUrl };
       
