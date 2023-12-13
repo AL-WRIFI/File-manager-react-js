@@ -3,11 +3,11 @@ import { Fragment } from "react";
 
 const InfoFile = () =>{
 
-
+    console.log("jfbhjbkjnjjjjj")
 
     return(
     <Fragment>
-        <h1></h1>
+        <h1>RRRRRRRRRRR</h1>
         <div className="col-lg-8 col-sm-6">
         <div className="mt-4 mt-sm-0 d-flex align-items-center justify-content-sm-end">
             <div className="dropdown mb-0">
@@ -15,9 +15,9 @@ const InfoFile = () =>{
                     <i className="mdi mdi-dots-vertical font-size-20"></i>
                 </a>
                 <div className="dropdown-menu dropdown-menu-end">                                            
-                    <a className="dropdown-item" href="#">select</a>
-                    <a className="dropdown-item" href="#">share</a>
-                    <a className="dropdown-item" href="#">info</a>
+                    <a className="dropdown-item" href="#">!!!!!!!!!</a>
+                    <a className="dropdown-item" href="#">#####</a>
+                    <a className="dropdown-item" href="#">IOOOO</a>
                 </div>
             </div>         
         </div>

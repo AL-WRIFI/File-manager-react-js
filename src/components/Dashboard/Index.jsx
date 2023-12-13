@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import ShowItems from "./ShowItems";
 import { useDispatch, useSelector } from "react-redux";
 import Recentfile from "../../RecentFiles";
-import SidBar from "../../SidBar";
+import Sidebar from "../Layouts/Sidebar";
 import { Outlet, useNavigate } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAlignRight, faCircleArrowRight, faPaste } from "@fortawesome/free-solid-svg-icons";
@@ -85,7 +85,7 @@ function Index(){
     <Fragment>
         <div className="container">
             <div className="row mt-5">
-                <SidBar />
+                <Sidebar />
                 <div className="col-12 col-lg-9">
                     <div className="card ">
                         <div className="card-body ">
@@ -157,7 +157,7 @@ function Index(){
                                     }     
                                 </Fragment>
                                 ):<Outlet/>} 
-                            <Recentfile />
+                            {/* <Recentfile /> */}
                         </div>
                     </div>
                 </div>

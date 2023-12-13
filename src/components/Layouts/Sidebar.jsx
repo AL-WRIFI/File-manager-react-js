@@ -1,32 +1,51 @@
 import { Fragment } from "react";
-import CreateFile from "./components/ModalForms/CreateFile";
+import { Link, useNavigate } from "react-router-dom";
+import { changeFolder } from "../../Redux/actionCreators/FolderActions";
+import { useDispatch } from "react-redux";
+import CreateFile from "../ModalForms/CreateFile";
 
 
-function SidBar(){
+function Sidebar(){
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const handleAllFiles =(filterName)=>{
+        if(filterName === "AllFiles"){
+            dispatch(changeFolder("root"));
+            navigate("/dashboard");
+        }else{
+            dispatch(changeFolder(filterName));
+            navigate(`/dashboard/filter/${filterName}`);
+        }
+    }
+
+    
 
     return(
         <Fragment>
             <div className="col-12 col-lg-3">
             <div className="card">
                 <div className="card-body">
-                    <div className="d-grid"> <a href="#" className="btn btn-primary" ><CreateFile/></a>
+                    <div className="d-grid"> <Link  className="btn btn-primary" ><CreateFile/></Link>
                     </div>
                     <h5 className="my-3">My Drive</h5>
                     <div className="fm-menu">
-                        <div className="list-group list-group-flush"> <a href="#" className="list-group-item py-1"><i className="bx bx-folder me-2"></i><span>All Files</span></a>
-                            <a href="#" className="list-group-item py-1"><i className="bx bx-analyse me-2"></i><span>Recents</span></a>
-                            <a href="#" className="list-group-item py-1"><i className="bx bx-file me-2"></i><span>Documents</span></a>
-                            <a href="#" className="list-group-item py-1"><i className="bx bx-image me-2"></i><span>Images</span></a>
-                            <a href="#" className="list-group-item py-1"><i className="bx bx-video me-2"></i><span>Videos</span></a>
-                            <a href="#" className="list-group-item py-1"><i className="bx bx-music me-2"></i><span>Audio</span></a>
-                            <a href="#" className="list-group-item py-1"><i className="bx bx-beer me-2"></i><span>Zip Files</span></a>
-                            <a href="#" className="list-group-item py-1"><i className="bx bx-plug me-2"></i><span>Important</span></a>
-                            <a href="#" className="list-group-item py-1"><i className="bx bx-trash-alt me-2"></i><span>Deleted Files</span></a>
+                        <div className="list-group list-group-flush"> 
+                            <div type="button" onClick={()=>{handleAllFiles("AllFiles")}} className="list-group-item py-1"><i className="bx bx-folder me-2"></i><span>All Files</span></div>
+                            {/* <a href="#" className="list-group-item py-1"><i className="bx bx-analyse me-2"></i><span>Recents</span></a> */}
+                            <div type="button" onClick={()=>{handleAllFiles("AllDocs")}} className="list-group-item py-1"><i className="bx bx-file me-2"></i><span>Documents</span></div>
+                            <div type="button" onClick={()=>{handleAllFiles("AllImage")}} className="list-group-item py-1"><i className="bx bx-image me-2"></i><span>Images</span></div>
+                            {/* <div type="button" className="list-group-item py-1"><i className="bx bx-video me-2"></i><span>Videos</span></div> */}
+                            {/* <div type="button" className="list-group-item py-1"><i className="bx bx-music me-2"></i><span>Audio</span></div> */}
+                            {/* <div type="button" className="list-group-item py-1"><i className="bx bx-beer me-2"></i><span>Zip Files</span></div> */}
+                            {/* <div type="button" className="list-group-item py-1"><i className="bx bx-plug me-2"></i><span>Important</span></div> */}
+                            <div type="button" className="list-group-item py-1"><i className="bx bx-trash-alt me-2"></i><span>Deleted Files</span></div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <br></br>
             <div className="card">
                 <div className="card-body">
                     <h5 className="mb-0 text-primary font-weight-bold">45.5 GB <span className="float-end text-secondary">50 GB</span></h5>
@@ -90,4 +109,4 @@ function SidBar(){
     )
 }
 
-export default SidBar;
+export default Sidebar;

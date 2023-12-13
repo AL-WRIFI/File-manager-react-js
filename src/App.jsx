@@ -13,6 +13,7 @@ import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Fragment } from 'react';
 import InfoFile from './components/Dashboard/infoFile';
+import FilterPage from './components/Dashboard/FilterPage';
 // import Varx from './vsr';
 function App() {
   
@@ -33,11 +34,11 @@ function App() {
         <Route  path="/var" element={<InfoFile/>} />
         <Route  path="/login" element={<Login/>} />
         <Route  path="/signup" element={<Register />}/>
-        <Route  path="/" to="/dashboard" />
-            {/* to
-       </Route> */}
+        {/* <Route  path="/" to="/dashboard" /> */}
+        {/* <Route  path="/dashboard/filter/:filter" element={<FilterPage />}/> */}
         <Route  path="/dashboard" element={<Dashboard />}>
-                <Route path='' element={<Index />} >
+                <Route  path='' element={<Index />} >
+                <Route  path="filter/:filterName" element={<FilterPage />}/>
                 <Route  path="folder/:folderId" element={<FolderComponent />}/>
                 <Route  path="file/:fileId" element={<FileComponent />}/>
               </Route>
