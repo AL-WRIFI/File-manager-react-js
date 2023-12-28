@@ -14,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Fragment } from 'react';
 import InfoFile from './components/Dashboard/infoFile';
 import FilterPage from './components/Dashboard/FilterPage';
+import Settings from './components/Dashboard/Settings/Settings';
 // import Varx from './vsr';
 function App() {
   
@@ -31,6 +32,7 @@ function App() {
       <NavbarComponent />
       <ToastContainer/>
       <Routes>
+        <Route  path="settings" element={<Settings/>}/>\
         <Route  path="/var" element={<InfoFile/>} />
         <Route  path="/login" element={<Login/>} />
         <Route  path="/signup" element={<Register />}/>
@@ -48,4 +50,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
